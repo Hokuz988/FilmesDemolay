@@ -27,7 +27,7 @@ export function CamposCadastro({ rotuloCodigo, dicaCodigo }: { rotuloCodigo: str
         </Campo>
       </div>
       <Campo rotulo={rotuloCodigo} dica={dicaCodigo}>
-        <input name="codigo" type="password" required autoComplete="off" className="campo" />
+        <input name="codigo" type="text" required autoComplete="off" autoCapitalize="none" spellCheck={false} className="campo" />
       </Campo>
     </>
   );

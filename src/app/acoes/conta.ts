@@ -81,7 +81,13 @@ function validarCadastro(fd: FormData) {
 
 export async function configurarInicial(_: Estado, fd: FormData): Promise<Estado> {
   if (!process.env.CODIGO_SETUP) return { erro: 'Defina a variável CODIGO_SETUP na Vercel antes de continuar.' };
-  if (!codigoConfere(texto(fd, 'codigo'), process.env.CODIGO_SETUP)) return { erro: 'Código de configuração incorreto.' };
+  const codigo = texto(fd, 'codigo');
+  if (!codigoConfere(codigo, process.env.CODIGO_SETUP)) {
+    // Diagnóstico temporário: só o tamanho, nunca o valor.
+    return {
+      erro: `Código de configuração incorreto. Você digitou ${codigo.length} caracteres; o CODIGO_SETUP da Vercel tem ${process.env.CODIGO_SETUP.trim().length}.`,
+    };
+  }
   const dados = validarCadastro(fd);
   if ('erro' in dados) return dados;
 
