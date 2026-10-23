@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { removerVoto, votar } from '@/app/acoes/votos';
+import { votar } from '@/app/acoes/votos';
 import { Capa } from '@/components/Comuns';
 import { Emblema } from '@/components/Emblema';
 import { BotaoEnviar } from '@/components/Formularios';
@@ -10,13 +10,6 @@ import { db } from '@/lib/db';
 import type { FilmeComVotos, Noite } from '@/lib/tipos';
 
 export const metadata = { title: 'Votação' };
-
-const PASSOS = [
-  'Confira a programação abaixo: capa, duração e sinopse de cada filme.',
-  'Toque no ingresso “Votar neste filme” do seu favorito. Cada membro tem um voto.',
-  'Mudou de ideia? Vote em outro filme. Vale o último voto até a votação encerrar.',
-];
-const ROMANOS = ['I', 'II', 'III'];
 
 export default async function PaginaVotacao() {
   const usuario = await exigirUsuario();
@@ -58,7 +51,6 @@ export default async function PaginaVotacao() {
   const numero = new Map(filmes.map((f, i) => [f.id, String(i + 1).padStart(2, '0')]));
   const totalVotos = filmes.reduce((soma, f) => soma + f.votos, 0);
   const maisVotos = Math.max(0, ...filmes.map((f) => f.votos));
-  const filmeEscolhido = filmes.find((f) => f.id === meuVoto?.filme_id);
   const vencedores = !aberta && maisVotos > 0 ? filmes.filter((f) => f.votos === maisVotos) : [];
   const restante = aberta && noite.prazo_votacao ? tempoRestante(noite.prazo_votacao) : null;
   const ordenados = aberta ? filmes : [...filmes].sort((a, b) => b.votos - a.votos);
@@ -84,44 +76,8 @@ export default async function PaginaVotacao() {
         </div>
       </section>
 
-      {/* Instruções e ingresso do usuário, ou resultado final */}
-      {aberta ? (
-        <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-          <div className="cartao p-5 sm:p-7">
-            <h2 className="titulo-secao">Instruções ao espectador</h2>
-            <ol className="mt-5 space-y-4">
-              {PASSOS.map((passo, i) => (
-                <li key={i} className="flex gap-4">
-                  <span className="w-9 shrink-0 font-titulo text-2xl leading-none font-bold text-vermelho">{ROMANOS[i]}</span>
-                  <p className="text-tinta/85">{passo}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          {filmeEscolhido ? (
-            <div className="flex flex-col justify-center bg-tinta p-5 text-papel sm:p-7">
-              <p className="font-maquina text-xs tracking-[0.2em] text-dourado uppercase">
-                Seu ingresso · Nº {numero.get(filmeEscolhido.id)}
-              </p>
-              <p className="mt-2 font-titulo text-2xl font-bold">{filmeEscolhido.titulo}</p>
-              <p className="mt-1 text-sm text-papel/65">Voto registrado. Dá para trocar até o fim da votação.</p>
-              <form action={removerVoto} className="mt-5">
-                <input type="hidden" name="noite_id" value={noite.id} />
-                <BotaoEnviar className="btn btn-pequeno border border-papel/40 text-papel hover:bg-papel hover:text-tinta">
-                  Remover meu voto
-                </BotaoEnviar>
-              </form>
-            </div>
-          ) : (
-            <div className="cartao flex flex-col justify-center border-vermelho/70 p-5 sm:p-7">
-              <p className="font-maquina text-xs tracking-[0.2em] text-vermelho uppercase">Seu ingresso</p>
-              <p className="mt-2 font-titulo text-2xl font-bold">Você ainda não votou</p>
-              <p className="mt-1 text-sm text-suave">Escolha um dos {filmes.length} filmes da programação abaixo.</p>
-            </div>
-          )}
-        </section>
-      ) : (
+      {/* Resultado final */}
+      {!aberta && (
         <section className="cartao px-5 py-9 text-center sm:py-12">
           {vencedores.length > 0 ? (
             <>
