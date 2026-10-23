@@ -20,7 +20,7 @@ export function TelaAutenticacao({
             <Emblema className="w-16 shrink-0 text-dourado sm:w-32" />
             <div>
               <p className="font-titulo text-2xl font-bold italic sm:text-3xl">Filminhos</p>
-              <p className="mt-1 font-letreiro text-xs tracking-[0.4em] text-dourado uppercase">DeMoleycos</p>
+              <p className="mt-1 font-letreiro text-xs tracking-[0.4em] text-dourado uppercase">DeMolay</p>
             </div>
             <p className="hidden font-maquina text-xs leading-relaxed text-dourado/80 sm:block">
               ADMISSÃO

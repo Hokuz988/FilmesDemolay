@@ -43,7 +43,7 @@ export function Marca({ tom = 'escuro' }: { tom?: 'escuro' | 'claro' }) {
       <span className="leading-none">
         <span className={`block font-titulo text-xl font-bold italic ${escuro ? 'text-papel' : 'text-tinta'}`}>Filminhos</span>
         <span className={`mt-1 block font-letreiro text-[0.65rem] tracking-[0.38em] uppercase ${escuro ? 'text-dourado' : 'text-vermelho'}`}>
-          DeMoleycos
+          DeMolay
         </span>
       </span>
     </span>

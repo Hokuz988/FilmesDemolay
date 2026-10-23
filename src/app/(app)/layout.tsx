@@ -45,7 +45,7 @@ export default async function LayoutApp({ children }: { children: React.ReactNod
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-6 text-center sm:flex-row sm:justify-between sm:text-left">
           <span className="flex items-center gap-2 font-letreiro text-xs tracking-[0.2em] text-suave uppercase">
             <Emblema className="w-6 text-vermelho" detalhe="var(--color-papel)" />
-            Filminhos DeMoleycos
+            Filminhos DeMolay
           </span>
           <span className="font-maquina text-xs text-suave">Pipoca por conta do capítulo.</span>
         </div>

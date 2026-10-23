@@ -8,7 +8,7 @@ const courier = Courier_Prime({ subsets: ['latin'], weight: ['400', '700'], vari
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: { default: 'Filminhos DeMoleycos', template: '%s · Filminhos DeMoleycos' },
+  title: { default: 'Filminhos DeMolay', template: '%s · Filminhos DeMolay' },
   description: 'Votação da noite de filmes do capítulo.',
 };
 

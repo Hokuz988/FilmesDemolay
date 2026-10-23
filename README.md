@@ -1,4 +1,4 @@
-# Filminhos DeMoleycos 🎬👑
+# Filminhos DeMolay 🎬👑
 
 Sistema de votação para a noite de filmes do capítulo. Feito em Next.js, com banco Postgres (Neon) e upload das capas no Vercel Blob, pronto para hospedar na Vercel.
 
