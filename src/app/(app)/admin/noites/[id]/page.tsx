@@ -59,34 +59,37 @@ export default async function PaginaNoite({ params }: { params: Promise<{ id: st
   const prazoVencido = noite.status === 'aberta' && !votacaoAberta(noite);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Cabeçalho e controle da votação */}
       <section className="cartao p-5 sm:p-6">
-        <Link href="/admin" className="text-sm text-suave hover:text-ouro">
-          ← Todas as noites
+        <Link href="/admin" className="font-letreiro text-xs tracking-[0.16em] text-suave uppercase hover:text-vermelho">
+          ← Todas as sessões
         </Link>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <h2 className="font-titulo text-2xl font-bold">{noite.titulo}</h2>
+            <p className="font-maquina text-xs text-vermelho">Sessão Nº {String(id).padStart(3, '0')}</p>
+            <div className="mt-1 flex flex-wrap items-center gap-3">
+              <h2 className="font-titulo text-3xl font-black">{noite.titulo}</h2>
               <SeloStatus status={noite.status} />
             </div>
-            <p className="mt-1 text-sm text-suave">
+            <p className="mt-1 font-maquina text-sm text-suave">
               {noite.data_evento ? formatarData(noite.data_evento) : 'Sem data definida'}
               {noite.prazo_votacao && ` · votação até ${formatarData(noite.prazo_votacao)}`}
             </p>
             {prazoVencido && (
-              <p className="mt-2 text-sm text-ouro">O prazo já passou: a votação está fechada para os membros.</p>
+              <p className="mt-2 border-l-4 border-ouro bg-dourado/15 px-3 py-1.5 text-sm">
+                O prazo já passou: a votação está fechada para os membros.
+              </p>
             )}
           </div>
           <div className="flex flex-wrap gap-2">
             {noite.status !== 'aberta' && (
-              <BotaoStatus id={id} status="aberta" className="btn btn-ouro">
+              <BotaoStatus id={id} status="aberta" className="btn btn-primario">
                 {noite.status === 'encerrada' ? 'Reabrir votação' : 'Abrir votação'}
               </BotaoStatus>
             )}
             {noite.status === 'aberta' && (
-              <BotaoStatus id={id} status="encerrada" className="btn btn-primario">
+              <BotaoStatus id={id} status="encerrada" className="btn btn-tinta">
                 Encerrar votação
               </BotaoStatus>
             )}
@@ -104,44 +107,49 @@ export default async function PaginaNoite({ params }: { params: Promise<{ id: st
           </div>
         </div>
         {noite.status === 'rascunho' && (
-          <p className="mt-4 rounded-lg bg-white/5 px-3 py-2 text-xs text-suave">
+          <p className="mt-4 border-t border-dashed border-linha pt-3 text-xs text-suave">
             Rascunhos não aparecem para os membros. Ao abrir a votação, qualquer outra votação aberta é encerrada.
           </p>
         )}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
+      <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
         {/* Filmes */}
         <section className="space-y-4">
-          <h3 className="titulo-secao">Filmes ({filmes.length})</h3>
+          <h3 className="titulo-secao">Programação · {filmes.length} filmes</h3>
 
           <details className="cartao group p-5 sm:p-6" open={filmes.length === 0}>
-            <summary className="cursor-pointer list-none font-semibold text-ouro-claro">
-              <span className="group-open:hidden">＋ Adicionar filme</span>
+            <summary className="cursor-pointer list-none font-letreiro text-sm tracking-[0.16em] text-vermelho uppercase">
+              <span className="group-open:hidden">+ Adicionar filme</span>
               <span className="hidden group-open:inline">Adicionar filme</span>
             </summary>
-            <FormAcao acao={salvarFilme} className="mt-4 space-y-4">
+            <FormAcao acao={salvarFilme} className="mt-5 space-y-4">
               <CamposFilme noiteId={id} />
-              <BotaoEnviar className="btn btn-ouro w-full sm:w-auto">Adicionar filme</BotaoEnviar>
+              <BotaoEnviar className="btn btn-primario w-full sm:w-auto">Adicionar filme</BotaoEnviar>
             </FormAcao>
           </details>
 
-          <ul className="space-y-3">
-            {filmes.map((filme) => (
-              <li key={filme.id} className="cartao overflow-hidden">
+          <ul className="space-y-4">
+            {filmes.map((filme, i) => (
+              <li key={filme.id} className="cartao">
                 <div className="flex gap-4 p-4">
-                  <Capa url={filme.capa_url} titulo={filme.titulo} className="w-20 shrink-0 rounded-lg sm:w-24" />
+                  <div className="w-20 shrink-0 bg-tinta p-1 sm:w-24">
+                    <Capa url={filme.capa_url} titulo={filme.titulo} />
+                  </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-titulo text-lg font-bold">{filme.titulo}</p>
-                    <p className="text-xs text-ouro">
+                    <p className="font-maquina text-xs text-vermelho">Nº {String(i + 1).padStart(2, '0')}</p>
+                    <p className="font-titulo text-lg leading-tight font-bold">{filme.titulo}</p>
+                    <p className="mt-0.5 font-maquina text-xs text-suave">
                       {formatarDuracao(filme.duracao_min) || 'Duração não informada'} · {filme.votos}{' '}
                       {filme.votos === 1 ? 'voto' : 'votos'}
                     </p>
-                    <p className="mt-2 line-clamp-3 text-sm text-suave">{filme.descricao || 'Sem sinopse.'}</p>
+                    <p className="mt-2 line-clamp-3 text-sm text-tinta/75">{filme.descricao || 'Sem sinopse.'}</p>
                   </div>
                 </div>
-                <details className="border-t border-borda">
-                  <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-suave hover:text-ouro">Editar filme</summary>
+                <details className="border-t border-dashed border-linha">
+                  <summary className="cursor-pointer px-4 py-3 font-letreiro text-xs tracking-[0.16em] text-suave uppercase hover:text-vermelho">
+                    Editar filme
+                  </summary>
                   <div className="space-y-4 px-4 pb-4">
                     <FormAcao acao={salvarFilme} className="space-y-4">
                       <CamposFilme noiteId={id} filme={filme} />
@@ -160,17 +168,17 @@ export default async function PaginaNoite({ params }: { params: Promise<{ id: st
           </ul>
         </section>
 
-        <div className="space-y-6">
-          {/* Resultados ao vivo (apenas admin) */}
-          <section className="cartao p-5 sm:p-6">
+        <div className="space-y-8">
+          {/* Apuração ao vivo (apenas admin) */}
+          <section className="bg-tinta p-5 text-papel sm:p-6">
             <div className="flex items-baseline justify-between">
-              <h3 className="titulo-secao">Resultado</h3>
-              <span className="text-xs text-suave">{totalVotos} votos</span>
+              <h3 className="font-letreiro text-sm tracking-[0.28em] text-dourado uppercase">Apuração ao vivo</h3>
+              <span className="font-maquina text-xs text-papel/60">{totalVotos} votos</span>
             </div>
             {filmes.length === 0 ? (
-              <p className="mt-3 text-sm text-suave">Adicione filmes para ver o resultado.</p>
+              <p className="mt-3 text-sm text-papel/60">Adicione filmes para ver a apuração.</p>
             ) : (
-              <ul className="mt-4 space-y-4">
+              <ul className="mt-5 space-y-4">
                 {[...filmes]
                   .sort((a, b) => b.votos - a.votos)
                   .map((filme) => {
@@ -179,31 +187,35 @@ export default async function PaginaNoite({ params }: { params: Promise<{ id: st
                     const nomes = eleitores.filter((e) => e.filme_id === filme.id).map((e) => e.nome);
                     return (
                       <li key={filme.id}>
-                        <div className="flex justify-between gap-2 text-sm">
-                          <span className={`truncate font-medium ${lider ? 'text-ouro-claro' : ''}`}>{filme.titulo}</span>
-                          <span className="shrink-0 text-suave">
+                        <div className="flex items-end gap-2 text-sm">
+                          <span className={`truncate font-titulo font-bold ${lider ? 'text-dourado' : ''}`}>{filme.titulo}</span>
+                          <span className="mb-1 flex-1 border-b border-dotted border-papel/30" />
+                          <span className="shrink-0 font-maquina text-papel/80">
                             {filme.votos} · {pct}%
                           </span>
                         </div>
-                        <div className="mt-1 h-2 overflow-hidden rounded-full bg-white/10">
-                          <div className={`h-full rounded-full ${lider ? 'bg-ouro' : 'bg-vermelho'}`} style={{ width: `${pct}%` }} />
+                        <div className="mt-1.5 h-1.5 bg-papel/10">
+                          <div className={`h-full ${lider ? 'bg-dourado' : 'bg-vermelho-vivo'}`} style={{ width: `${pct}%` }} />
                         </div>
-                        {nomes.length > 0 && <p className="mt-1 text-xs text-suave/80">{nomes.join(', ')}</p>}
+                        {nomes.length > 0 && <p className="mt-1 text-xs text-papel/55">{nomes.join(', ')}</p>}
                       </li>
                     );
                   })}
               </ul>
             )}
             {pendentes.length > 0 && (
-              <div className="mt-5 border-t border-borda pt-4">
-                <p className="text-xs font-semibold text-suave">Ainda não votaram ({pendentes.length})</p>
-                <p className="mt-1 text-xs text-suave/80">{pendentes.map((p) => p.nome).join(', ')}</p>
+              <div className="mt-5 border-t border-dashed border-papel/20 pt-4">
+                <p className="font-letreiro text-xs tracking-[0.16em] text-dourado/80 uppercase">Ainda não votaram ({pendentes.length})</p>
+                <p className="mt-1 text-xs text-papel/55">{pendentes.map((p) => p.nome).join(', ')}</p>
               </div>
             )}
             {totalVotos > 0 && (
               <form action={zerarVotos} className="mt-5">
                 <input type="hidden" name="id" value={id} />
-                <BotaoEnviar className="btn btn-perigo btn-pequeno" confirmar="Apagar todos os votos desta noite?">
+                <BotaoEnviar
+                  className="btn btn-pequeno border border-vermelho-vivo text-red-200 hover:bg-vermelho-vivo hover:text-papel"
+                  confirmar="Apagar todos os votos desta noite?"
+                >
                   Zerar votos
                 </BotaoEnviar>
               </form>
@@ -213,7 +225,7 @@ export default async function PaginaNoite({ params }: { params: Promise<{ id: st
           {/* Dados da noite */}
           <section className="cartao p-5 sm:p-6">
             <h3 className="titulo-secao">Dados da noite</h3>
-            <FormAcao acao={atualizarNoite} className="mt-4 space-y-4">
+            <FormAcao acao={atualizarNoite} className="mt-5 space-y-4">
               <input type="hidden" name="id" value={id} />
               <CamposNoite noite={noite} />
               <BotaoEnviar>Salvar dados</BotaoEnviar>

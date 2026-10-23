@@ -4,17 +4,19 @@ import { exigirAdmin } from '@/lib/auth';
 export default async function LayoutAdmin({ children }: { children: React.ReactNode }) {
   await exigirAdmin();
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-8">
+      <div className="flex flex-col gap-4 border-b-[3px] border-double border-tinta/80 pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-titulo text-xs tracking-[0.3em] text-ouro uppercase">Administração</p>
-          <h1 className="font-titulo text-2xl font-bold sm:text-3xl">Painel de controle</h1>
+          <p className="font-maquina text-xs tracking-[0.2em] text-vermelho uppercase">Cabine de projeção</p>
+          <h1 className="font-titulo text-3xl font-black sm:text-4xl">Painel do administrador</h1>
         </div>
-        <nav className="flex gap-1 rounded-xl border border-borda bg-painel/80 p-1">
-          <LinkNav href="/admin" exato>
+        <nav className="flex gap-4">
+          <LinkNav href="/admin" exato tom="claro">
             Noites de filme
           </LinkNav>
-          <LinkNav href="/admin/usuarios">Usuários</LinkNav>
+          <LinkNav href="/admin/usuarios" tom="claro">
+            Membros
+          </LinkNav>
         </nav>
       </div>
       {children}

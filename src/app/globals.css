@@ -1,76 +1,107 @@
 @import "tailwindcss";
 
-/* Paleta inspirada na Ordem DeMolay: vermelho, dourado e branco sobre fundo escuro de cinema. */
+/* Programa de cinema antigo + heráldica DeMolay: papel marfim, tinta, vermelho e dourado. */
 @theme {
-  --color-vermelho: #b3121f;
-  --color-vermelho-vivo: #d7192a;
-  --color-vermelho-escuro: #5e0a11;
-  --color-ouro: #d4af37;
-  --color-ouro-claro: #f0d77f;
-  --color-fundo: #0e0b0b;
-  --color-painel: #181313;
-  --color-painel-2: #221a1a;
-  --color-borda: #3b2b2b;
-  --color-texto: #f6efe4;
-  --color-suave: #b8aa9b;
+  --color-papel: #f3ead7;
+  --color-cartao: #fbf6ea;
+  --color-creme: #ebdfc4;
+  --color-tinta: #1d1715;
+  --color-suave: #6a5849;
+  --color-linha: #c7b08a;
+  --color-vermelho: #9e1b22;
+  --color-vermelho-vivo: #b8242c;
+  --color-vermelho-escuro: #5a0e13;
+  --color-ouro: #8a6514;
+  --color-dourado: #e0b44c;
+  --color-verde: #2e6a3c;
 }
 
 @theme inline {
-  --font-titulo: var(--font-cinzel), Georgia, serif;
+  --font-titulo: var(--font-playfair), Georgia, serif;
+  --font-letreiro: var(--font-oswald), Impact, sans-serif;
+  --font-maquina: var(--font-courier), "Courier New", monospace;
   --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
-html {
-  color-scheme: dark;
-}
-
-body {
-  min-height: 100dvh;
-  background-color: var(--color-fundo);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgb(179 18 31 / 0.28), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 100% 100%, rgb(212 175 55 / 0.06), transparent 70%);
-  background-repeat: no-repeat;
-  color: var(--color-texto);
+@layer base {
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-papel);
+    /* Granulado de papel */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    color: var(--color-tinta);
+  }
+  ::selection {
+    background: var(--color-vermelho);
+    color: var(--color-papel);
+  }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-letreiro text-sm font-medium tracking-[0.14em] uppercase transition
       disabled:cursor-not-allowed disabled:opacity-60
-      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ouro;
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vermelho;
   }
   .btn-primario {
-    @apply bg-vermelho text-white shadow-lg shadow-vermelho/20 hover:bg-vermelho-vivo;
+    @apply bg-vermelho text-papel hover:bg-vermelho-vivo;
+    box-shadow: inset 0 0 0 3px var(--color-vermelho), inset 0 0 0 4px rgb(224 180 76 / 0.6);
   }
-  .btn-ouro {
-    @apply bg-ouro text-fundo hover:bg-ouro-claro;
+  .btn-tinta {
+    @apply bg-tinta text-dourado hover:bg-black;
   }
   .btn-fantasma {
-    @apply border border-borda text-texto hover:border-ouro hover:text-ouro-claro;
+    @apply border border-tinta/70 text-tinta hover:bg-tinta hover:text-papel;
   }
   .btn-perigo {
-    @apply border border-vermelho/60 text-red-300 hover:bg-vermelho/20;
+    @apply border border-vermelho text-vermelho hover:bg-vermelho hover:text-papel;
   }
   .btn-pequeno {
     @apply px-3 py-1.5 text-xs;
   }
   .campo {
-    @apply w-full rounded-lg border border-borda bg-fundo/70 px-3 py-2.5 text-base text-texto
-      placeholder:text-suave/50 focus:border-ouro focus:outline-none focus:ring-2 focus:ring-ouro/30
-      file:mr-3 file:rounded-md file:border-0 file:bg-painel-2 file:px-3 file:py-1.5 file:text-sm file:text-ouro
+    @apply w-full border border-linha bg-cartao px-3 py-2.5 text-base text-tinta
+      placeholder:text-suave/50 focus:border-tinta focus:ring-2 focus:ring-vermelho/20 focus:outline-none
+      file:mr-3 file:border-0 file:bg-tinta file:px-3 file:py-1.5 file:font-letreiro file:text-xs file:tracking-widest file:text-dourado file:uppercase
       sm:text-sm;
   }
   .rotulo {
-    @apply mb-1.5 block text-sm font-medium text-suave;
+    @apply mb-1.5 block font-letreiro text-xs tracking-[0.16em] text-suave uppercase;
   }
   .cartao {
-    @apply rounded-2xl border border-borda bg-painel/90 shadow-xl shadow-black/40;
+    @apply border-[3px] border-double border-tinta/80 bg-cartao;
   }
   .titulo-secao {
-    @apply font-titulo text-lg font-bold tracking-wide text-ouro sm:text-xl;
+    @apply flex items-center gap-3 font-letreiro text-sm font-medium tracking-[0.28em] text-vermelho uppercase
+      after:h-px after:flex-1 after:bg-linha after:content-[''];
   }
-  .filete {
-    @apply h-px w-full bg-gradient-to-r from-transparent via-ouro/50 to-transparent;
+  .carimbo {
+    @apply inline-block -rotate-3 border-2 px-2 py-0.5 font-letreiro text-[0.7rem] font-semibold tracking-[0.2em] uppercase;
+  }
+
+  /* Letreiro de cinema com moldura de lâmpadas */
+  .letreiro {
+    padding: 14px;
+    background-color: var(--color-vermelho-escuro);
+    background-image: radial-gradient(circle, #fff1c2 0 2.5px, rgb(224 180 76 / 0.45) 3.5px, transparent 5px);
+    background-size: 20px 20px;
+  }
+  .letreiro-painel {
+    background: radial-gradient(ellipse at 50% 0%, #3b1517, var(--color-tinta) 70%);
+    box-shadow:
+      inset 0 0 0 1px rgb(224 180 76 / 0.5),
+      inset 0 0 0 6px var(--color-tinta),
+      inset 0 0 0 7px rgb(224 180 76 / 0.25);
+  }
+
+  /* Recorte de ingresso: semicírculos nas laterais */
+  .ingresso {
+    --furo: 9px;
+    -webkit-mask:
+      radial-gradient(circle var(--furo) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--furo) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+    mask:
+      radial-gradient(circle var(--furo) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--furo) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
   }
 }

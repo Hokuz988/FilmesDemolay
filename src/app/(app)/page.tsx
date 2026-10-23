@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { removerVoto, votar } from '@/app/acoes/votos';
-import { Capa, SeloStatus } from '@/components/Comuns';
-import { Coroa } from '@/components/Coroa';
+import { Capa } from '@/components/Comuns';
+import { Emblema } from '@/components/Emblema';
 import { BotaoEnviar } from '@/components/Formularios';
 import { Sinopse } from '@/components/Interativos';
 import { exigirUsuario } from '@/lib/auth';
@@ -10,6 +10,13 @@ import { db } from '@/lib/db';
 import type { FilmeComVotos, Noite } from '@/lib/tipos';
 
 export const metadata = { title: 'Votação' };
+
+const PASSOS = [
+  'Confira a programação abaixo: capa, duração e sinopse de cada filme.',
+  'Toque no ingresso “Votar neste filme” do seu favorito. Cada membro tem um voto.',
+  'Mudou de ideia? Vote em outro filme. Vale o último voto até a votação encerrar.',
+];
+const ROMANOS = ['I', 'II', 'III'];
 
 export default async function PaginaVotacao() {
   const usuario = await exigirUsuario();
@@ -23,12 +30,13 @@ export default async function PaginaVotacao() {
 
   if (!noite) {
     return (
-      <div className="cartao mx-auto max-w-lg p-8 text-center">
-        <Coroa className="mx-auto w-14 text-ouro" />
-        <h1 className="mt-4 font-titulo text-2xl font-bold">Nenhuma votação no momento</h1>
-        <p className="mt-2 text-suave">Assim que a próxima noite de filme for aberta, os filmes aparecem aqui.</p>
+      <div className="cartao mx-auto max-w-lg px-6 py-12 text-center">
+        <Emblema className="mx-auto w-20 text-vermelho" detalhe="var(--color-cartao)" />
+        <p className="mt-5 font-maquina text-xs tracking-[0.2em] text-vermelho uppercase">Sala vazia</p>
+        <h1 className="mt-1 font-titulo text-3xl font-black">Nenhuma sessão em cartaz</h1>
+        <p className="mt-3 text-suave">Assim que a próxima noite de filme for aberta, a programação aparece aqui.</p>
         {usuario.papel === 'admin' && (
-          <Link href="/admin" className="btn btn-ouro mt-6">
+          <Link href="/admin" className="btn btn-primario mt-6">
             Criar noite de filme
           </Link>
         )}
@@ -47,6 +55,7 @@ export default async function PaginaVotacao() {
   `) as { filme_id: number }[];
 
   const aberta = votacaoAberta(noite);
+  const numero = new Map(filmes.map((f, i) => [f.id, String(i + 1).padStart(2, '0')]));
   const totalVotos = filmes.reduce((soma, f) => soma + f.votos, 0);
   const maisVotos = Math.max(0, ...filmes.map((f) => f.votos));
   const filmeEscolhido = filmes.find((f) => f.id === meuVoto?.filme_id);
@@ -55,73 +64,76 @@ export default async function PaginaVotacao() {
   const ordenados = aberta ? filmes : [...filmes].sort((a, b) => b.votos - a.votos);
 
   return (
-    <div className="space-y-8 sm:space-y-10">
-      {/* Cabeçalho da noite */}
-      <section className="text-center">
-        <p className="font-titulo text-xs tracking-[0.35em] text-ouro uppercase">Noite de Filme</p>
-        <h1 className="mt-2 font-titulo text-3xl font-bold text-balance sm:text-5xl">{noite.titulo}</h1>
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm text-suave">
-          <SeloStatus status={aberta ? 'aberta' : 'encerrada'} rotulo={aberta ? 'Votação aberta' : 'Votação encerrada'} />
-          {noite.data_evento && <span className="rounded-full bg-white/5 px-3 py-1">🎬 {formatarData(noite.data_evento)}</span>}
-          {restante && <span className="rounded-full bg-white/5 px-3 py-1">⏳ Encerra em {restante}</span>}
+    <div className="space-y-10 sm:space-y-14">
+      {/* Letreiro */}
+      <section className="letreiro">
+        <div className="letreiro-painel px-5 py-9 text-center sm:px-10 sm:py-14">
+          <p className="font-maquina text-xs tracking-[0.2em] text-dourado uppercase sm:text-sm">
+            {aberta ? 'Em cartaz · votação aberta' : 'Votação encerrada'} — sessão nº {String(noite.id).padStart(3, '0')}
+          </p>
+          <h1 className="mt-4 font-letreiro text-4xl leading-[0.95] font-semibold tracking-wide text-balance text-papel uppercase sm:text-6xl">
+            {noite.titulo}
+          </h1>
+          <div className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 font-letreiro text-xs tracking-[0.18em] uppercase sm:text-sm">
+            {noite.data_evento && <span className="text-dourado">{formatarData(noite.data_evento)}</span>}
+            {restante && <span className="text-papel/75">Votação encerra em {restante}</span>}
+          </div>
+          {noite.descricao && (
+            <p className="mx-auto mt-6 max-w-2xl font-titulo text-lg whitespace-pre-line text-papel/75 italic">{noite.descricao}</p>
+          )}
         </div>
-        {noite.descricao && <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-suave">{noite.descricao}</p>}
-        <div className="filete mx-auto mt-8 max-w-md" />
       </section>
 
-      {/* Situação do voto / resultado */}
+      {/* Instruções e ingresso do usuário, ou resultado final */}
       {aberta ? (
-        <section className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-          <div className="cartao p-5 sm:p-6">
-            <h2 className="titulo-secao">Como votar</h2>
-            <ol className="mt-4 space-y-3 text-sm">
-              {[
-                'Confira os filmes abaixo: capa, duração e sinopse.',
-                'Toque em “Votar neste filme” no seu favorito. Cada membro tem 1 voto.',
-                'Mudou de ideia? É só votar em outro filme até a votação encerrar.',
-              ].map((passo, i) => (
-                <li key={i} className="flex gap-3">
-                  <span className="grid size-7 shrink-0 place-items-center rounded-full bg-vermelho font-titulo text-sm font-bold text-ouro">
-                    {i + 1}
-                  </span>
-                  <span className="pt-1 text-texto/90">{passo}</span>
+        <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+          <div className="cartao p-5 sm:p-7">
+            <h2 className="titulo-secao">Instruções ao espectador</h2>
+            <ol className="mt-5 space-y-4">
+              {PASSOS.map((passo, i) => (
+                <li key={i} className="flex gap-4">
+                  <span className="w-9 shrink-0 font-titulo text-2xl leading-none font-bold text-vermelho">{ROMANOS[i]}</span>
+                  <p className="text-tinta/85">{passo}</p>
                 </li>
               ))}
             </ol>
           </div>
-          <div
-            className={`cartao flex flex-col justify-center p-5 sm:p-6 ${
-              filmeEscolhido ? 'border-emerald-500/40 bg-emerald-950/30' : 'border-ouro/30'
-            }`}
-          >
-            {filmeEscolhido ? (
-              <>
-                <p className="text-sm text-emerald-300">✓ Seu voto foi registrado</p>
-                <p className="mt-1 font-titulo text-xl font-bold">{filmeEscolhido.titulo}</p>
-                <form action={removerVoto} className="mt-4">
-                  <input type="hidden" name="noite_id" value={noite.id} />
-                  <BotaoEnviar className="btn btn-fantasma btn-pequeno">Remover meu voto</BotaoEnviar>
-                </form>
-              </>
-            ) : (
-              <>
-                <p className="text-sm text-ouro">Você ainda não votou</p>
-                <p className="mt-1 text-texto/90">Escolha um dos {filmes.length} filmes abaixo.</p>
-              </>
-            )}
-          </div>
+
+          {filmeEscolhido ? (
+            <div className="flex flex-col justify-center bg-tinta p-5 text-papel sm:p-7">
+              <p className="font-maquina text-xs tracking-[0.2em] text-dourado uppercase">
+                Seu ingresso · Nº {numero.get(filmeEscolhido.id)}
+              </p>
+              <p className="mt-2 font-titulo text-2xl font-bold">{filmeEscolhido.titulo}</p>
+              <p className="mt-1 text-sm text-papel/65">Voto registrado. Dá para trocar até o fim da votação.</p>
+              <form action={removerVoto} className="mt-5">
+                <input type="hidden" name="noite_id" value={noite.id} />
+                <BotaoEnviar className="btn btn-pequeno border border-papel/40 text-papel hover:bg-papel hover:text-tinta">
+                  Remover meu voto
+                </BotaoEnviar>
+              </form>
+            </div>
+          ) : (
+            <div className="cartao flex flex-col justify-center border-vermelho/70 p-5 sm:p-7">
+              <p className="font-maquina text-xs tracking-[0.2em] text-vermelho uppercase">Seu ingresso</p>
+              <p className="mt-2 font-titulo text-2xl font-bold">Você ainda não votou</p>
+              <p className="mt-1 text-sm text-suave">Escolha um dos {filmes.length} filmes da programação abaixo.</p>
+            </div>
+          )}
         </section>
       ) : (
-        <section className="cartao border-ouro/40 p-5 text-center sm:p-6">
+        <section className="cartao px-5 py-9 text-center sm:py-12">
           {vencedores.length > 0 ? (
             <>
-              <Coroa className="mx-auto w-10 text-ouro" />
-              <p className="mt-2 text-sm text-suave">{vencedores.length > 1 ? 'Empate entre' : 'Filme escolhido'}</p>
-              <p className="mt-1 font-titulo text-2xl font-bold text-ouro-claro">
-                {vencedores.map((f) => f.titulo).join(' · ')}
+              <Emblema className="mx-auto w-16 text-vermelho" detalhe="var(--color-cartao)" />
+              <p className="mt-4 font-letreiro text-xs tracking-[0.3em] text-suave uppercase">
+                {vencedores.length > 1 ? 'Empate entre' : 'O filme escolhido é'}
               </p>
-              <p className="mt-2 text-sm text-suave">
-                {totalVotos} {totalVotos === 1 ? 'voto' : 'votos'} no total
+              <p className="mt-2 font-titulo text-3xl font-black text-balance sm:text-5xl">
+                {vencedores.map((f) => f.titulo).join(' & ')}
+              </p>
+              <p className="mt-4 font-maquina text-sm text-suave">
+                {totalVotos} {totalVotos === 1 ? 'voto apurado' : 'votos apurados'}
               </p>
             </>
           ) : (
@@ -130,70 +142,66 @@ export default async function PaginaVotacao() {
         </section>
       )}
 
-      {/* Filmes */}
+      {/* Programação */}
       <section>
-        <h2 className="titulo-secao mb-4">{aberta ? 'Filmes concorrendo' : 'Resultado'}</h2>
+        <h2 className="titulo-secao mb-6">{aberta ? 'Programação' : 'Apuração'}</h2>
         {filmes.length === 0 ? (
-          <p className="cartao p-6 text-center text-suave">Os filmes desta noite ainda não foram cadastrados.</p>
+          <p className="cartao p-6 text-center text-suave">Os filmes desta noite ainda não foram anunciados.</p>
         ) : (
-          <ul className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+          <ul className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {ordenados.map((filme) => {
+              const n = numero.get(filme.id);
               const meu = filme.id === meuVoto?.filme_id;
               const vencedor = vencedores.some((v) => v.id === filme.id);
               const pct = totalVotos ? Math.round((filme.votos / totalVotos) * 100) : 0;
               return (
-                <li
-                  key={filme.id}
-                  className={`cartao group flex overflow-hidden sm:flex-col ${
-                    vencedor ? 'ring-2 ring-ouro' : meu ? 'ring-2 ring-vermelho-vivo' : ''
-                  }`}
-                >
-                  <div className="relative min-h-48 w-32 shrink-0 sm:min-h-0 sm:w-full">
-                    <Capa url={filme.capa_url} titulo={filme.titulo} className="h-full sm:h-auto" />
-                    <div className="absolute top-2 left-2 flex flex-col gap-1">
-                      {vencedor && (
-                        <span className="rounded-full bg-ouro px-2 py-0.5 text-[0.7rem] font-bold text-fundo">Vencedor</span>
-                      )}
-                      {meu && (
-                        <span className="rounded-full bg-vermelho px-2 py-0.5 text-[0.7rem] font-bold text-white">Seu voto</span>
-                      )}
-                    </div>
+                <li key={filme.id} className={`cartao flex sm:flex-col ${meu ? 'bg-creme' : ''}`}>
+                  <div className="w-28 shrink-0 bg-tinta p-1.5 sm:w-full sm:p-2">
+                    <Capa url={filme.capa_url} titulo={filme.titulo} className="h-full min-h-44 sm:h-auto sm:min-h-0" />
                   </div>
-                  <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
-                    <div>
-                      <h3 className="font-titulo text-lg leading-snug font-bold">{filme.titulo}</h3>
-                      {filme.duracao_min && (
-                        <p className="mt-0.5 text-xs font-medium text-ouro">⏱ {formatarDuracao(filme.duracao_min)}</p>
-                      )}
+                  <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 font-maquina text-xs">
+                      <span className="text-vermelho">Nº {n}</span>
+                      {filme.duracao_min ? <span className="text-suave">{formatarDuracao(filme.duracao_min)}</span> : null}
                     </div>
-                    <Sinopse texto={filme.descricao} />
-                    <div className="mt-auto pt-2">
+                    {(vencedor || meu) && (
+                      <div className="mt-2 flex gap-2">
+                        {vencedor && <span className="carimbo border-vermelho text-vermelho">Escolhido</span>}
+                        {meu && <span className="carimbo border-tinta text-tinta">Seu voto</span>}
+                      </div>
+                    )}
+                    <h3 className="mt-1.5 font-titulo text-xl leading-tight font-bold sm:text-2xl">{filme.titulo}</h3>
+                    <div className="mt-2">
+                      <Sinopse texto={filme.descricao} />
+                    </div>
+
+                    <div className="mt-auto pt-5">
                       {aberta ? (
                         meu ? (
-                          <p className="btn w-full cursor-default bg-emerald-600/20 text-emerald-300 ring-1 ring-emerald-500/40">
-                            ✓ Voto registrado
-                          </p>
+                          <div className="ingresso flex items-center justify-between bg-tinta px-6 py-3.5 font-letreiro text-sm tracking-[0.14em] text-dourado uppercase">
+                            <span>✓ Voto registrado</span>
+                            <span className="border-l border-dashed border-dourado/50 pl-3 font-maquina normal-case">Nº {n}</span>
+                          </div>
                         ) : (
                           <form action={votar}>
                             <input type="hidden" name="filme_id" value={filme.id} />
-                            <BotaoEnviar className="btn btn-primario w-full">
-                              {meuVoto ? 'Trocar para este filme' : 'Votar neste filme'}
+                            <BotaoEnviar className="btn btn-primario ingresso w-full justify-between px-6 py-3.5">
+                              <span>{meuVoto ? 'Trocar para este' : 'Votar neste filme'}</span>
+                              <span className="border-l border-dashed border-papel/50 pl-3 font-maquina normal-case">Nº {n}</span>
                             </BotaoEnviar>
                           </form>
                         )
                       ) : (
                         <div>
-                          <div className="flex justify-between text-xs text-suave">
+                          <div className="flex items-end font-maquina text-sm">
                             <span>
                               {filme.votos} {filme.votos === 1 ? 'voto' : 'votos'}
                             </span>
-                            <span>{pct}%</span>
+                            <span className="mx-2 mb-1 flex-1 border-b border-dotted border-suave/60" />
+                            <span className="font-bold">{pct}%</span>
                           </div>
-                          <div className="mt-1 h-2 overflow-hidden rounded-full bg-white/10">
-                            <div
-                              className={`h-full rounded-full ${vencedor ? 'bg-ouro' : 'bg-vermelho'}`}
-                              style={{ width: `${pct}%` }}
-                            />
+                          <div className="mt-1.5 h-1.5 bg-creme">
+                            <div className={`h-full ${vencedor ? 'bg-vermelho' : 'bg-tinta/50'}`} style={{ width: `${pct}%` }} />
                           </div>
                         </div>
                       )}
