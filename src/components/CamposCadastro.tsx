@@ -6,13 +6,11 @@ export function CamposCadastro({ rotuloCodigo, dicaCodigo }: { rotuloCodigo: str
       <Campo rotulo="Nome">
         <input name="nome" required maxLength={80} autoComplete="name" className="campo" />
       </Campo>
-      <Campo rotulo="Usuário" dica="Letras minúsculas, números, ponto, hífen ou _ (3 a 32).">
+      <Campo rotulo="Usuário" dica="Sem espaços nem acentos: letras, números, ponto, hífen ou _ (3 a 32). Ex.: joao.silva">
         <input
           name="login"
           required
-          minLength={3}
           maxLength={32}
-          pattern="[a-z0-9._\-]{3,32}"
           autoComplete="username"
           autoCapitalize="none"
           className="campo"

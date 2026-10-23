@@ -181,7 +181,7 @@ export async function criarUsuario(_: Estado, fd: FormData): Promise<Estado> {
   const papel = fd.get('papel') === 'admin' ? 'admin' : 'membro';
   if (!nome) return { erro: 'Informe o nome.' };
   if (!REGEX_LOGIN.test(login)) {
-    return { erro: 'Usuário deve ter de 3 a 32 caracteres: letras minúsculas, números, ponto, hífen ou _.' };
+    return { erro: 'Usuário inválido: use de 3 a 32 caracteres, sem espaços nem acentos (letras, números, ponto, hífen ou _). Ex.: joao.silva' };
   }
   const erroSenha = validarSenha(senha);
   if (erroSenha) return { erro: erroSenha };

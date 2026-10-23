@@ -128,13 +128,11 @@ export default async function PaginaUsuarios() {
           <Campo rotulo="Nome">
             <input name="nome" required maxLength={80} className="campo" />
           </Campo>
-          <Campo rotulo="Usuário" dica="Letras minúsculas, números, ponto, hífen ou _.">
+          <Campo rotulo="Usuário" dica="Sem espaços nem acentos: letras, números, ponto, hífen ou _. Ex.: joao.silva">
             <input
               name="login"
               required
-              minLength={3}
               maxLength={32}
-              pattern="[a-z0-9._\-]{3,32}"
               autoCapitalize="none"
               autoComplete="off"
               className="campo"
