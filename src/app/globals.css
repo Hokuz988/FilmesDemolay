@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* Paleta inspirada na Ordem DeMolay: vermelho, dourado e branco sobre fundo escuro de cinema. */
+@theme {
+  --color-vermelho: #b3121f;
+  --color-vermelho-vivo: #d7192a;
+  --color-vermelho-escuro: #5e0a11;
+  --color-ouro: #d4af37;
+  --color-ouro-claro: #f0d77f;
+  --color-fundo: #0e0b0b;
+  --color-painel: #181313;
+  --color-painel-2: #221a1a;
+  --color-borda: #3b2b2b;
+  --color-texto: #f6efe4;
+  --color-suave: #b8aa9b;
+}
+
+@theme inline {
+  --font-titulo: var(--font-cinzel), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--color-fundo);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgb(179 18 31 / 0.28), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgb(212 175 55 / 0.06), transparent 70%);
+  background-repeat: no-repeat;
+  color: var(--color-texto);
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition
+      disabled:cursor-not-allowed disabled:opacity-60
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ouro;
+  }
+  .btn-primario {
+    @apply bg-vermelho text-white shadow-lg shadow-vermelho/20 hover:bg-vermelho-vivo;
+  }
+  .btn-ouro {
+    @apply bg-ouro text-fundo hover:bg-ouro-claro;
+  }
+  .btn-fantasma {
+    @apply border border-borda text-texto hover:border-ouro hover:text-ouro-claro;
+  }
+  .btn-perigo {
+    @apply border border-vermelho/60 text-red-300 hover:bg-vermelho/20;
+  }
+  .btn-pequeno {
+    @apply px-3 py-1.5 text-xs;
+  }
+  .campo {
+    @apply w-full rounded-lg border border-borda bg-fundo/70 px-3 py-2.5 text-base text-texto
+      placeholder:text-suave/50 focus:border-ouro focus:outline-none focus:ring-2 focus:ring-ouro/30
+      file:mr-3 file:rounded-md file:border-0 file:bg-painel-2 file:px-3 file:py-1.5 file:text-sm file:text-ouro
+      sm:text-sm;
+  }
+  .rotulo {
+    @apply mb-1.5 block text-sm font-medium text-suave;
+  }
+  .cartao {
+    @apply rounded-2xl border border-borda bg-painel/90 shadow-xl shadow-black/40;
+  }
+  .titulo-secao {
+    @apply font-titulo text-lg font-bold tracking-wide text-ouro sm:text-xl;
+  }
+  .filete {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-ouro/50 to-transparent;
+  }
+}
