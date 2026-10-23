@@ -28,10 +28,16 @@ export function validarSenha(senha: string): string | null {
   return null;
 }
 
+/** Remove espaços e aspas que costumam vir junto ao colar o valor na Vercel. */
+function limparCodigo(valor: string) {
+  return valor.trim().replace(/^["']+|["']+$/g, '').trim();
+}
+
 /** Compara códigos (convite/setup) em tempo constante. */
-export function codigoConfere(informado: string, esperado: string | undefined) {
+export function codigoConfere(informado: string, esperadoBruto: string | undefined) {
+  const esperado = limparCodigo(esperadoBruto ?? '');
   if (!esperado) return false;
-  const a = createHash('sha256').update(informado).digest();
+  const a = createHash('sha256').update(limparCodigo(informado)).digest();
   const b = createHash('sha256').update(esperado).digest();
   return timingSafeEqual(a, b);
 }
