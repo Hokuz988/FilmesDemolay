@@ -15,9 +15,9 @@ export default async function PaginaSetup() {
   return (
     <TelaAutenticacao titulo="Configuração inicial" subtitulo="Crie a conta do primeiro administrador.">
       {!process.env.CODIGO_SETUP ? (
-        <p className="border-l-4 border-ouro bg-dourado/15 p-4 text-sm">
-          Defina a variável de ambiente <code className="font-maquina">CODIGO_SETUP</code> no painel da Vercel e faça um novo
-          deploy para continuar.
+        <p className="border-l-2 border-ouro bg-ouro/10 p-4">
+          Defina a variável de ambiente <code className="font-mono text-sm text-ouro-claro">CODIGO_SETUP</code> no painel da Vercel e
+          faça um novo deploy para continuar.
         </p>
       ) : (
         <FormAcao acao={configurarInicial} className="space-y-4">

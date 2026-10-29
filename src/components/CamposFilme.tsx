@@ -6,7 +6,7 @@ export function CamposFilme({ noiteId, filme }: { noiteId: number; filme?: Filme
     <>
       <input type="hidden" name="noite_id" value={noiteId} />
       {filme && <input type="hidden" name="filme_id" value={filme.id} />}
-      <div className="grid gap-4 sm:grid-cols-[1fr_140px]">
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_140px]">
         <Campo rotulo="Nome do filme">
           <input name="titulo" required maxLength={150} defaultValue={filme?.titulo} className="campo" />
         </Campo>
@@ -35,8 +35,8 @@ export function CamposFilme({ noiteId, filme }: { noiteId: number; filme?: Filme
         </Campo>
       </div>
       {filme?.capa_url && (
-        <label className="flex items-center gap-2 text-sm text-suave">
-          <input type="checkbox" name="remover_capa" className="size-4 accent-vermelho" />
+        <label className="flex items-center gap-2 text-nevoa">
+          <input type="checkbox" name="remover_capa" className="size-4 accent-ouro" />
           Remover a capa atual
         </label>
       )}

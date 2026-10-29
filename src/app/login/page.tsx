@@ -16,7 +16,7 @@ export default async function PaginaLogin() {
   if (total === 0) redirect('/setup');
 
   return (
-    <TelaAutenticacao titulo="Entrar" subtitulo="Apresente seu ingresso para votar no filme da próxima sessão.">
+    <TelaAutenticacao titulo="Entrar" subtitulo="Apresente-se à Sentinela para votar no filme da próxima sessão.">
       <FormAcao acao={entrar} className="space-y-4">
         <Campo rotulo="Usuário">
           <input name="login" required autoComplete="username" autoCapitalize="none" className="campo" />
@@ -24,16 +24,16 @@ export default async function PaginaLogin() {
         <Campo rotulo="Senha">
           <input name="senha" type="password" required autoComplete="current-password" className="campo" />
         </Campo>
-        <label className="flex items-center gap-2 text-sm text-suave">
-          <input type="checkbox" name="lembrar" defaultChecked className="size-4 accent-vermelho" />
+        <label className="flex items-center gap-2 text-nevoa">
+          <input type="checkbox" name="lembrar" defaultChecked className="size-4 accent-ouro" />
           Manter conectado neste dispositivo
         </label>
         <BotaoEnviar className="btn btn-primario w-full py-3">Entrar</BotaoEnviar>
       </FormAcao>
       {process.env.CODIGO_CONVITE && (
-        <p className="mt-6 text-sm text-suave">
+        <p className="mt-6 text-nevoa">
           Ainda não tem conta?{' '}
-          <Link href="/registrar" className="font-semibold text-vermelho underline underline-offset-2 hover:text-vermelho-vivo">
+          <Link href="/registrar" className="font-semibold text-ouro underline decoration-ouro/50 underline-offset-4 hover:text-ouro-claro">
             Criar conta com o código de convite
           </Link>
         </p>

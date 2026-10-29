@@ -11,24 +11,24 @@ export default async function PaginaConta() {
   return (
     <div className="mx-auto max-w-xl space-y-8">
       <div>
-        <p className="font-maquina text-xs tracking-[0.2em] text-vermelho uppercase">Cadastro do espectador</p>
-        <h1 className="font-titulo text-4xl font-black">Minha conta</h1>
+        <p className="sobretitulo">Ficha do membro</p>
+        <h1 className="mt-1 font-titulo text-3xl font-bold sm:text-4xl">Minha conta</h1>
       </div>
 
       <section className="cartao p-5 sm:p-6">
         <dl className="grid gap-4 sm:grid-cols-3">
-          <div>
+          <div className="min-w-0">
             <dt className="rotulo">Nome</dt>
             <dd className="font-titulo text-lg font-bold">{usuario.nome}</dd>
           </div>
-          <div>
+          <div className="min-w-0">
             <dt className="rotulo">Usuário</dt>
-            <dd className="font-maquina">@{usuario.login}</dd>
+            <dd className="text-marfim/85">@{usuario.login}</dd>
           </div>
           <div>
             <dt className="rotulo">Permissão</dt>
             <dd>
-              <span className={`carimbo ${usuario.papel === 'admin' ? 'border-vermelho text-vermelho' : 'border-tinta text-tinta'}`}>
+              <span className={`selo ${usuario.papel === 'admin' ? 'border-ouro bg-ouro text-anil' : 'border-nevoa/50 text-nevoa'}`}>
                 {usuario.papel === 'admin' ? 'Administrador' : 'Membro'}
               </span>
             </dd>

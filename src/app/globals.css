@@ -1,107 +1,162 @@
 @import "tailwindcss";
 
-/* Programa de cinema antigo + heráldica DeMolay: papel marfim, tinta, vermelho e dourado. */
+/*
+ * Tema DeMolay: as cores oficiais do emblema da Ordem (anil, rubi, ouro e branco)
+ * sobre a noite estrelada do medalhão central, onde ficam o crescente e as estrelas.
+ */
 @theme {
-  --color-papel: #f3ead7;
-  --color-cartao: #fbf6ea;
-  --color-creme: #ebdfc4;
-  --color-tinta: #1d1715;
-  --color-suave: #6a5849;
-  --color-linha: #c7b08a;
-  --color-vermelho: #9e1b22;
-  --color-vermelho-vivo: #b8242c;
-  --color-vermelho-escuro: #5a0e13;
-  --color-ouro: #8a6514;
-  --color-dourado: #e0b44c;
-  --color-verde: #2e6a3c;
+  --color-abismo: #05061a;
+  --color-noite: #0a0c29;
+  --color-painel: #11143c;
+  --color-painel-2: #191d4f;
+  --color-campo: #080a23;
+  --color-linha: #2b3070;
+  --color-anil: #180f73;
+  --color-ouro: #f6b40c;
+  --color-ouro-claro: #ffd35c;
+  --color-rubi: #c10d20;
+  --color-rubi-vivo: #dd1a2f;
+  --color-marfim: #f4efe3;
+  --color-nevoa: #a7acd6;
+  --color-alerta: #ff919c;
+
+  /* A Garamond tem olho pequeno: a escala de texto fica um pouco acima do padrão. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.6;
 }
 
 @theme inline {
-  --font-titulo: var(--font-playfair), Georgia, serif;
-  --font-letreiro: var(--font-oswald), Impact, sans-serif;
-  --font-maquina: var(--font-courier), "Courier New", monospace;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-titulo: var(--font-cinzel), "Trajan Pro", Georgia, serif;
+  --font-ornamental: var(--font-cinzel-decorativa), var(--font-cinzel), Georgia, serif;
+  --font-texto: var(--font-garamond), Garamond, Georgia, serif;
 }
 
 @layer base {
+  :root {
+    color-scheme: dark;
+    --estrela: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.6L14.7 8.88L22.46 9.2L16.37 14.02L18.47 21.5L12 17.2L5.53 21.5L7.63 14.02L1.54 9.2L9.3 8.88Z'/%3E%3C/svg%3E");
+    /* Céu do medalhão (painéis) e céu do fundo da página, mais discreto. */
+    --estrelas: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Ccircle cx='4.2' cy='117.9' r='0.46' fill='%23F6B40C' fill-opacity='0.33'/%3E%3Ccircle cx='106.5' cy='51.1' r='0.67' fill='%23FFFFFF' fill-opacity='0.66'/%3E%3Ccircle cx='159.5' cy='189.2' r='1.20' fill='%23FFFFFF' fill-opacity='0.67'/%3E%3Ccircle cx='174.3' cy='96.3' r='0.92' fill='%23FFFFFF' fill-opacity='0.52'/%3E%3Ccircle cx='262.0' cy='216.4' r='1.07' fill='%23FFFFFF' fill-opacity='0.40'/%3E%3Ccircle cx='43.6' cy='256.7' r='0.65' fill='%23F6B40C' fill-opacity='0.53'/%3E%3Ccircle cx='222.4' cy='49.4' r='0.83' fill='%23FFFFFF' fill-opacity='0.73'/%3E%3Ccircle cx='84.8' cy='163.7' r='1.17' fill='%23FFFFFF' fill-opacity='0.61'/%3E%3Ccircle cx='181.2' cy='23.6' r='0.88' fill='%23FFFFFF' fill-opacity='0.73'/%3E%3Ccircle cx='9.4' cy='154.5' r='1.09' fill='%23FFFFFF' fill-opacity='0.30'/%3E%3Ccircle cx='18.9' cy='143.9' r='1.08' fill='%23F6B40C' fill-opacity='0.63'/%3E%3Ccircle cx='74.0' cy='135.6' r='0.54' fill='%23FFFFFF' fill-opacity='0.66'/%3E%3Ccircle cx='92.5' cy='132.6' r='1.17' fill='%23FFFFFF' fill-opacity='0.67'/%3E%3Ccircle cx='81.0' cy='152.9' r='0.79' fill='%23FFFFFF' fill-opacity='0.54'/%3E%3Ccircle cx='175.5' cy='168.7' r='1.07' fill='%23FFFFFF' fill-opacity='0.37'/%3E%3Ccircle cx='8.2' cy='50.2' r='1.06' fill='%23F6B40C' fill-opacity='0.37'/%3E%3Ccircle cx='102.5' cy='263.6' r='1.04' fill='%23FFFFFF' fill-opacity='0.31'/%3E%3Ccircle cx='212.7' cy='146.9' r='1.14' fill='%23FFFFFF' fill-opacity='0.34'/%3E%3Ccircle cx='201.6' cy='172.4' r='0.92' fill='%23FFFFFF' fill-opacity='0.40'/%3E%3Ccircle cx='207.3' cy='31.1' r='0.73' fill='%23FFFFFF' fill-opacity='0.26'/%3E%3Ccircle cx='162.8' cy='161.3' r='0.81' fill='%23F6B40C' fill-opacity='0.33'/%3E%3Ccircle cx='46.5' cy='26.3' r='1.10' fill='%23FFFFFF' fill-opacity='0.29'/%3E%3Ccircle cx='268.7' cy='47.6' r='0.85' fill='%23FFFFFF' fill-opacity='0.71'/%3E%3Ccircle cx='167.5' cy='272.2' r='0.73' fill='%23FFFFFF' fill-opacity='0.49'/%3E%3Ccircle cx='219.2' cy='240.5' r='1.11' fill='%23FFFFFF' fill-opacity='0.33'/%3E%3Ccircle cx='24.2' cy='261.4' r='0.58' fill='%23F6B40C' fill-opacity='0.37'/%3E%3Ccircle cx='276.8' cy='1.6' r='1.10' fill='%23FFFFFF' fill-opacity='0.49'/%3E%3Ccircle cx='170.6' cy='163.3' r='0.72' fill='%23FFFFFF' fill-opacity='0.79'/%3E%3Ccircle cx='69.0' cy='91.1' r='0.52' fill='%23FFFFFF' fill-opacity='0.73'/%3E%3Ccircle cx='166.3' cy='75.6' r='0.87' fill='%23FFFFFF' fill-opacity='0.41'/%3E%3Ccircle cx='170.9' cy='261.7' r='1.05' fill='%23F6B40C' fill-opacity='0.27'/%3E%3Ccircle cx='161.2' cy='40.3' r='1.11' fill='%23FFFFFF' fill-opacity='0.46'/%3E%3Ccircle cx='39.0' cy='100.3' r='0.56' fill='%23FFFFFF' fill-opacity='0.42'/%3E%3Ccircle cx='138.0' cy='140.9' r='0.75' fill='%23FFFFFF' fill-opacity='0.27'/%3E%3C/svg%3E");
+    --estrelas-fundo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Ccircle cx='1.3' cy='48.7' r='1.10' fill='%23F6B40C' fill-opacity='0.34'/%3E%3Ccircle cx='175.7' cy='180.4' r='0.65' fill='%23FFFFFF' fill-opacity='0.22'/%3E%3Ccircle cx='404.2' cy='177.8' r='0.57' fill='%23FFFFFF' fill-opacity='0.13'/%3E%3Ccircle cx='348.8' cy='193.0' r='0.83' fill='%23FFFFFF' fill-opacity='0.23'/%3E%3Ccircle cx='358.3' cy='140.3' r='0.96' fill='%23FFFFFF' fill-opacity='0.31'/%3E%3Ccircle cx='67.5' cy='317.5' r='1.18' fill='%23FFFFFF' fill-opacity='0.15'/%3E%3Ccircle cx='255.5' cy='114.5' r='0.53' fill='%23F6B40C' fill-opacity='0.13'/%3E%3Ccircle cx='189.8' cy='130.8' r='0.81' fill='%23FFFFFF' fill-opacity='0.30'/%3E%3Ccircle cx='95.4' cy='164.1' r='1.05' fill='%23FFFFFF' fill-opacity='0.30'/%3E%3Ccircle cx='370.1' cy='108.8' r='0.75' fill='%23FFFFFF' fill-opacity='0.15'/%3E%3Ccircle cx='259.2' cy='115.4' r='1.15' fill='%23FFFFFF' fill-opacity='0.36'/%3E%3Ccircle cx='309.5' cy='404.9' r='0.74' fill='%23FFFFFF' fill-opacity='0.41'/%3E%3Ccircle cx='213.7' cy='25.9' r='0.56' fill='%23F6B40C' fill-opacity='0.19'/%3E%3Ccircle cx='416.2' cy='415.8' r='0.73' fill='%23FFFFFF' fill-opacity='0.43'/%3E%3Ccircle cx='65.3' cy='378.2' r='0.82' fill='%23FFFFFF' fill-opacity='0.14'/%3E%3Ccircle cx='283.1' cy='94.7' r='0.51' fill='%23FFFFFF' fill-opacity='0.32'/%3E%3Ccircle cx='64.8' cy='224.5' r='0.72' fill='%23FFFFFF' fill-opacity='0.29'/%3E%3Ccircle cx='246.3' cy='83.1' r='0.71' fill='%23FFFFFF' fill-opacity='0.19'/%3E%3Ccircle cx='205.7' cy='218.7' r='1.03' fill='%23F6B40C' fill-opacity='0.16'/%3E%3Ccircle cx='182.4' cy='162.0' r='0.54' fill='%23FFFFFF' fill-opacity='0.22'/%3E%3Ccircle cx='244.6' cy='353.5' r='0.73' fill='%23FFFFFF' fill-opacity='0.33'/%3E%3Ccircle cx='123.4' cy='189.3' r='0.54' fill='%23FFFFFF' fill-opacity='0.16'/%3E%3Ccircle cx='24.1' cy='118.4' r='0.67' fill='%23FFFFFF' fill-opacity='0.40'/%3E%3Ccircle cx='397.1' cy='8.6' r='0.95' fill='%23FFFFFF' fill-opacity='0.43'/%3E%3Ccircle cx='351.5' cy='48.4' r='0.62' fill='%23F6B40C' fill-opacity='0.31'/%3E%3Ccircle cx='254.5' cy='386.0' r='1.16' fill='%23FFFFFF' fill-opacity='0.33'/%3E%3Ccircle cx='254.7' cy='350.0' r='0.60' fill='%23FFFFFF' fill-opacity='0.44'/%3E%3Ccircle cx='310.1' cy='380.0' r='0.69' fill='%23FFFFFF' fill-opacity='0.37'/%3E%3Ccircle cx='380.9' cy='326.1' r='0.56' fill='%23FFFFFF' fill-opacity='0.35'/%3E%3Ccircle cx='26.3' cy='317.5' r='0.85' fill='%23FFFFFF' fill-opacity='0.32'/%3E%3C/svg%3E");
+  }
   body {
     min-height: 100dvh;
-    background-color: var(--color-papel);
-    /* Granulado de papel */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    color: var(--color-tinta);
+    background-color: var(--color-noite);
+    background-image: var(--estrelas-fundo), radial-gradient(1400px 640px at 50% -260px, rgb(44 34 170 / 0.5), transparent 70%);
+    background-repeat: repeat, no-repeat;
+    color: var(--color-marfim);
+    font-variant-numeric: lining-nums;
+    overflow-wrap: break-word;
+    -webkit-tap-highlight-color: transparent;
   }
   ::selection {
-    background: var(--color-vermelho);
-    color: var(--color-papel);
+    background: var(--color-ouro);
+    color: var(--color-anil);
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-letreiro text-sm font-medium tracking-[0.14em] uppercase transition
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-titulo text-[0.8rem] font-bold tracking-[0.14em] uppercase transition
       disabled:cursor-not-allowed disabled:opacity-60
-      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vermelho;
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ouro;
   }
+  /* Veludo rubi com moldura dupla de ouro, como a coroa do emblema. */
   .btn-primario {
-    @apply bg-vermelho text-papel hover:bg-vermelho-vivo;
-    box-shadow: inset 0 0 0 3px var(--color-vermelho), inset 0 0 0 4px rgb(224 180 76 / 0.6);
+    --fundo: var(--color-rubi);
+    background-color: var(--fundo);
+    color: var(--color-marfim);
+    box-shadow:
+      inset 0 0 0 1px rgb(246 180 12 / 0.85),
+      inset 0 0 0 3px var(--fundo),
+      inset 0 0 0 4px rgb(246 180 12 / 0.35);
+    &:hover:not(:disabled) {
+      --fundo: var(--color-rubi-vivo);
+    }
   }
-  .btn-tinta {
-    @apply bg-tinta text-dourado hover:bg-black;
+  .btn-ouro {
+    @apply text-anil;
+    background-image: linear-gradient(180deg, var(--color-ouro-claro), var(--color-ouro) 55%, #d99a06);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3);
+    &:hover:not(:disabled) {
+      filter: brightness(1.08);
+    }
   }
   .btn-fantasma {
-    @apply border border-tinta/70 text-tinta hover:bg-tinta hover:text-papel;
+    @apply border border-ouro/40 text-marfim hover:border-ouro hover:text-ouro;
   }
   .btn-perigo {
-    @apply border border-vermelho text-vermelho hover:bg-vermelho hover:text-papel;
+    @apply border border-rubi-vivo/70 text-alerta hover:bg-rubi hover:text-marfim;
   }
   .btn-pequeno {
-    @apply px-3 py-1.5 text-xs;
+    @apply px-3 py-1.5 text-[0.7rem];
   }
+
   .campo {
-    @apply w-full border border-linha bg-cartao px-3 py-2.5 text-base text-tinta
-      placeholder:text-suave/50 focus:border-tinta focus:ring-2 focus:ring-vermelho/20 focus:outline-none
-      file:mr-3 file:border-0 file:bg-tinta file:px-3 file:py-1.5 file:font-letreiro file:text-xs file:tracking-widest file:text-dourado file:uppercase
-      sm:text-sm;
+    @apply w-full min-w-0 border border-linha bg-campo px-3 py-2.5 text-base text-marfim
+      placeholder:text-nevoa/45 hover:border-ouro/35 focus:border-ouro focus:ring-2 focus:ring-ouro/20 focus:outline-none
+      file:mr-3 file:cursor-pointer file:border-0 file:bg-ouro file:px-3 file:py-1.5 file:font-titulo file:text-[0.7rem] file:font-bold file:tracking-widest file:text-anil file:uppercase;
   }
   .rotulo {
-    @apply mb-1.5 block font-letreiro text-xs tracking-[0.16em] text-suave uppercase;
+    @apply mb-1.5 block font-titulo text-[0.7rem] font-bold tracking-[0.18em] text-ouro/90 uppercase;
   }
+  .sobretitulo {
+    @apply font-titulo text-xs font-semibold tracking-[0.24em] text-ouro uppercase;
+  }
+
+  /* Placa com moldura dupla: filete de ouro por fora e outro, mais tênue, por dentro. */
   .cartao {
-    @apply border-[3px] border-double border-tinta/80 bg-cartao;
+    @apply border border-ouro/30 bg-painel shadow-[0_22px_44px_-28px_rgb(0_0_0/0.9)];
+    outline: 1px solid rgb(246 180 12 / 0.1);
+    outline-offset: -5px;
   }
-  .titulo-secao {
-    @apply flex items-center gap-3 font-letreiro text-sm font-medium tracking-[0.28em] text-vermelho uppercase
-      after:h-px after:flex-1 after:bg-linha after:content-[''];
+  .cartao-interativo {
+    @apply transition hover:border-ouro/60 hover:bg-painel-2;
   }
-  .carimbo {
-    @apply inline-block -rotate-3 border-2 px-2 py-0.5 font-letreiro text-[0.7rem] font-semibold tracking-[0.2em] uppercase;
-  }
-
-  /* Letreiro de cinema com moldura de lâmpadas */
-  .letreiro {
-    padding: 14px;
-    background-color: var(--color-vermelho-escuro);
-    background-image: radial-gradient(circle, #fff1c2 0 2.5px, rgb(224 180 76 / 0.45) 3.5px, transparent 5px);
-    background-size: 20px 20px;
-  }
-  .letreiro-painel {
-    background: radial-gradient(ellipse at 50% 0%, #3b1517, var(--color-tinta) 70%);
+  .cartao-destaque {
+    border-color: var(--color-ouro);
     box-shadow:
-      inset 0 0 0 1px rgb(224 180 76 / 0.5),
-      inset 0 0 0 6px var(--color-tinta),
-      inset 0 0 0 7px rgb(224 180 76 / 0.25);
+      0 0 0 1px var(--color-ouro),
+      0 0 40px -10px rgb(246 180 12 / 0.5);
   }
 
-  /* Recorte de ingresso: semicírculos nas laterais */
-  .ingresso {
-    --furo: 9px;
-    -webkit-mask:
-      radial-gradient(circle var(--furo) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
-      radial-gradient(circle var(--furo) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
-    mask:
-      radial-gradient(circle var(--furo) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
-      radial-gradient(circle var(--furo) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+  .titulo-secao {
+    @apply flex items-center gap-3 font-titulo text-sm font-bold tracking-[0.22em] text-ouro uppercase;
+    &::before {
+      content: '';
+      @apply size-3.5 shrink-0 bg-current;
+      mask: var(--estrela) center / contain no-repeat;
+    }
+    &::after {
+      content: '';
+      @apply h-px flex-1 bg-linear-to-r from-ouro/50 to-transparent;
+    }
+  }
+  .selo {
+    @apply inline-flex items-center gap-1.5 border px-2 py-0.5 font-titulo text-[0.65rem] font-bold tracking-[0.16em] uppercase;
+  }
+
+  /* Céu anil do medalhão, com estrelas. */
+  .ceu {
+    background-color: var(--color-abismo);
+    background-image:
+      var(--estrelas),
+      radial-gradient(ellipse 90% 80% at 50% 0%, rgb(48 36 180 / 0.55), transparent 70%),
+      radial-gradient(ellipse 70% 60% at 50% 115%, rgb(193 13 32 / 0.22), transparent 70%);
+  }
+  .medalhao {
+    @apply relative isolate overflow-hidden border border-ouro/50;
+    outline: 1px solid rgb(246 180 12 / 0.22);
+    outline-offset: -7px;
+  }
+  /* Fileira de contas douradas, como o aro do medalhão do emblema. */
+  .contas {
+    height: 6px;
+    background: radial-gradient(circle, var(--color-ouro) 0 1.4px, transparent 1.9px) center / 10px 6px repeat-x;
+    opacity: 0.7;
   }
 }

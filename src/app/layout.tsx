@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from 'next';
-import { Courier_Prime, Inter, Oswald, Playfair_Display } from 'next/font/google';
+import { Cinzel, Cinzel_Decorative, EB_Garamond } from 'next/font/google';
 import './globals.css';
 
-const playfair = Playfair_Display({ subsets: ['latin'], weight: ['700', '900'], style: ['normal', 'italic'], variable: '--font-playfair' });
-const oswald = Oswald({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-oswald' });
-const courier = Courier_Prime({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-courier' });
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-cinzel' });
+const cinzelDecorativa = Cinzel_Decorative({ subsets: ['latin'], weight: ['700'], variable: '--font-cinzel-decorativa' });
+const garamond = EB_Garamond({ subsets: ['latin'], style: ['normal', 'italic'], variable: '--font-garamond' });
 
 export const metadata: Metadata = {
   title: { default: 'Filminhos DeMolay', template: '%s · Filminhos DeMolay' },
@@ -15,13 +14,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#5a0e13',
+  themeColor: '#05061a',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${playfair.variable} ${oswald.variable} ${courier.variable} ${inter.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+    <html lang="pt-BR" className={`${cinzel.variable} ${cinzelDecorativa.variable} ${garamond.variable}`}>
+      <body className="font-texto antialiased">{children}</body>
     </html>
   );
 }

@@ -18,9 +18,9 @@ export default async function PaginaRegistrar() {
         <CamposCadastro rotuloCodigo="Código de convite" />
         <BotaoEnviar className="btn btn-primario w-full py-3">Criar conta</BotaoEnviar>
       </FormAcao>
-      <p className="mt-6 text-sm text-suave">
+      <p className="mt-6 text-nevoa">
         Já tem conta?{' '}
-        <Link href="/login" className="font-semibold text-vermelho underline underline-offset-2 hover:text-vermelho-vivo">
+        <Link href="/login" className="font-semibold text-ouro underline decoration-ouro/50 underline-offset-4 hover:text-ouro-claro">
           Entrar
         </Link>
       </p>

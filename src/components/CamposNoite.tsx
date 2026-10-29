@@ -25,13 +25,16 @@ export function CamposNoite({ noite }: { noite?: Noite }) {
           className="campo"
         />
       </Campo>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Campo rotulo="Data e hora da sessão">
-          <input name="data_evento" type="datetime-local" defaultValue={paraInputLocal(noite?.data_evento ?? null)} className="campo" />
-        </Campo>
-        <Campo rotulo="Prazo da votação" dica="Horário de Brasília. Opcional.">
-          <input name="prazo_votacao" type="datetime-local" defaultValue={paraInputLocal(noite?.prazo_votacao ?? null)} className="campo" />
-        </Campo>
+      {/* Duas colunas só quando o formulário tem largura para isso (nos painéis laterais fica uma). */}
+      <div className="@container">
+        <div className="grid gap-4 @md:grid-cols-2">
+          <Campo rotulo="Data e hora da sessão">
+            <input name="data_evento" type="datetime-local" defaultValue={paraInputLocal(noite?.data_evento ?? null)} className="campo" />
+          </Campo>
+          <Campo rotulo="Prazo da votação" dica="Horário de Brasília. Opcional.">
+            <input name="prazo_votacao" type="datetime-local" defaultValue={paraInputLocal(noite?.prazo_votacao ?? null)} className="campo" />
+          </Campo>
+        </div>
       </div>
     </>
   );

@@ -48,8 +48,8 @@ export default async function PaginaUsuarios() {
   `) as (Usuario & { bloqueado_ate: Date | null })[];
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
-      <section>
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <section className="min-w-0">
         <h2 className="titulo-secao mb-4">Membros · {usuarios.length}</h2>
         <ul className="space-y-3">
           {usuarios.map((u) => {
@@ -59,22 +59,22 @@ export default async function PaginaUsuarios() {
               <li key={u.id} className={`cartao p-4 ${u.ativo ? '' : 'opacity-60'}`}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="font-titulo text-lg font-bold">
-                      {u.nome} {souEu && <span className="font-sans text-xs font-normal text-suave">(você)</span>}
+                    <p className="font-titulo text-lg font-bold text-marfim">
+                      {u.nome} {souEu && <span className="font-texto text-sm font-normal text-nevoa italic">(você)</span>}
                     </p>
-                    <p className="font-maquina text-xs text-suave">@{u.login}</p>
+                    <p className="text-sm text-nevoa">@{u.login}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className={`carimbo ${u.papel === 'admin' ? 'border-vermelho text-vermelho' : 'border-tinta/60 text-tinta/70'}`}>
+                    <span className={`selo ${u.papel === 'admin' ? 'border-ouro bg-ouro text-anil' : 'border-nevoa/50 text-nevoa'}`}>
                       {u.papel === 'admin' ? 'Admin' : 'Membro'}
                     </span>
-                    {!u.ativo && <span className="carimbo border-suave text-suave">Desativado</span>}
-                    {bloqueado && <span className="carimbo border-vermelho text-vermelho">Bloqueado</span>}
+                    {!u.ativo && <span className="selo border-nevoa/40 text-nevoa">Desativado</span>}
+                    {bloqueado && <span className="selo border-rubi-vivo/70 text-alerta">Bloqueado</span>}
                   </div>
                 </div>
 
                 {!souEu && (
-                  <div className="mt-3 flex flex-wrap gap-2 border-t border-dashed border-linha pt-3">
+                  <div className="mt-3 flex flex-wrap gap-2 border-t border-linha pt-3">
                     <AcaoUsuario acao={alterarPapel} id={u.id} extra={{ papel: u.papel === 'admin' ? 'membro' : 'admin' }}>
                       {u.papel === 'admin' ? 'Tornar membro' : 'Tornar admin'}
                     </AcaoUsuario>
@@ -93,7 +93,7 @@ export default async function PaginaUsuarios() {
                       Excluir
                     </AcaoUsuario>
                     <details className="w-full">
-                      <summary className="cursor-pointer font-letreiro text-xs tracking-[0.16em] text-suave uppercase hover:text-vermelho">
+                      <summary className="cursor-pointer font-titulo text-[0.7rem] font-bold tracking-[0.16em] text-nevoa uppercase hover:text-ouro">
                         Redefinir senha
                       </summary>
                       <FormAcao acao={redefinirSenha} className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-start">
@@ -108,7 +108,7 @@ export default async function PaginaUsuarios() {
                           placeholder="Nova senha (mín. 8)"
                           className="campo sm:flex-1"
                         />
-                        <BotaoEnviar className="btn btn-tinta">Redefinir</BotaoEnviar>
+                        <BotaoEnviar className="btn btn-ouro">Redefinir</BotaoEnviar>
                       </FormAcao>
                     </details>
                   </div>
@@ -121,7 +121,7 @@ export default async function PaginaUsuarios() {
 
       <section className="cartao order-first h-fit p-5 sm:p-6 lg:order-none">
         <h2 className="titulo-secao">Novo membro</h2>
-        <p className="mt-2 text-sm text-suave">Envie o usuário e a senha para a pessoa; ela pode trocar a senha em “Minha conta”.</p>
+        <p className="mt-2 text-sm text-nevoa">Envie o usuário e a senha para a pessoa; ela pode trocar a senha em “Minha conta”.</p>
         <FormAcao acao={criarUsuario} className="mt-5 space-y-4">
           <Campo rotulo="Nome">
             <input name="nome" required maxLength={80} className="campo" />
