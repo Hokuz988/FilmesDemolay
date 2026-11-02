@@ -1,12 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-  <circle cx="60" cy="60" r="57" fill="#c10d20" stroke="#f6b40c" stroke-width="5"/>
-  <g fill="#fff" stroke="#180f73" stroke-width="3">
-    <g transform="translate(60 60)"><path d="M0 -6 L-23 -50 L0 -39 L23 -50 Z"/><circle cx="-23" cy="-50" r="4.6" stroke-width="2.4"/><circle cx="23" cy="-50" r="4.6" stroke-width="2.4"/></g>
-    <g transform="translate(60 60) rotate(72)"><path d="M0 -6 L-23 -50 L0 -39 L23 -50 Z"/><circle cx="-23" cy="-50" r="4.6" stroke-width="2.4"/><circle cx="23" cy="-50" r="4.6" stroke-width="2.4"/></g>
-    <g transform="translate(60 60) rotate(144)"><path d="M0 -6 L-23 -50 L0 -39 L23 -50 Z"/><circle cx="-23" cy="-50" r="4.6" stroke-width="2.4"/><circle cx="23" cy="-50" r="4.6" stroke-width="2.4"/></g>
-    <g transform="translate(60 60) rotate(216)"><path d="M0 -6 L-23 -50 L0 -39 L23 -50 Z"/><circle cx="-23" cy="-50" r="4.6" stroke-width="2.4"/><circle cx="23" cy="-50" r="4.6" stroke-width="2.4"/></g>
-    <g transform="translate(60 60) rotate(288)"><path d="M0 -6 L-23 -50 L0 -39 L23 -50 Z"/><circle cx="-23" cy="-50" r="4.6" stroke-width="2.4"/><circle cx="23" cy="-50" r="4.6" stroke-width="2.4"/></g>
-  </g>
-  <circle cx="60" cy="60" r="22" fill="#180f73" stroke="#f6b40c" stroke-width="3"/>
-  <path d="M65.48 48.21 A13 13 0 1 0 70.8 67.23 A10.4 10.4 0 1 1 65.48 48.21 Z" fill="#f6b40c"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36">
+  <path d="M1 1H31V17C31 26 24 32 16 35C8 32 1 26 1 17Z" fill="#b63226" stroke="#f4cb25" stroke-width="2"/>
+  <path d="M16 6.4L18.1 12.1L24.2 12.4L19.4 16.2L21.1 22.1L16 18.7L10.9 22.1L12.6 16.2L7.8 12.4L13.9 12.1Z" fill="#fff"/>
 </svg>

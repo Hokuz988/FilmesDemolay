@@ -18,12 +18,12 @@ export function FormAcao({
     <form action={enviar} className={className}>
       {children}
       {estado?.erro && (
-        <p role="alert" className="border-l-2 border-rubi-vivo bg-rubi/15 px-3 py-2 text-sm text-alerta">
+        <p role="alert" className="rounded-[3px] border-l-4 border-vermelho bg-vermelho/10 px-3 py-2 text-sm text-vermelho-escuro">
           {estado.erro}
         </p>
       )}
       {estado?.ok && (
-        <p role="status" className="border-l-2 border-ouro bg-ouro/10 px-3 py-2 text-sm text-ouro-claro">
+        <p role="status" className="rounded-[3px] border-l-4 border-ouro bg-ouro/25 px-3 py-2 text-sm text-marinho">
           {estado.ok}
         </p>
       )}

@@ -11,8 +11,8 @@ export function LinkNav({ href, exato, children }: { href: string; exato?: boole
     <Link
       href={href}
       aria-current={ativo ? 'page' : undefined}
-      className={`border-b-2 px-2 py-1.5 font-titulo text-[0.7rem] font-bold tracking-[0.14em] whitespace-nowrap uppercase transition sm:text-xs sm:tracking-[0.18em] ${
-        ativo ? 'border-ouro text-ouro' : 'border-transparent text-marfim/70 hover:text-marfim'
+      className={`border-b-[3px] px-2.5 py-2 text-sm font-semibold whitespace-nowrap transition-colors ${
+        ativo ? 'border-vermelho text-marinho' : 'border-transparent text-cinza hover:text-marinho'
       }`}
     >
       {children}
@@ -26,12 +26,14 @@ export function Sinopse({ texto }: { texto: string }) {
   const longa = texto.length > 180;
   return (
     <div>
-      <p className={`leading-relaxed whitespace-pre-line text-marfim/80 ${longa && !aberta ? 'line-clamp-4' : ''}`}>{texto}</p>
+      <p className={`text-[0.9375rem] leading-relaxed whitespace-pre-line text-cinza ${longa && !aberta ? 'line-clamp-4' : ''}`}>
+        {texto}
+      </p>
       {longa && (
         <button
           type="button"
           onClick={() => setAberta(!aberta)}
-          className="mt-1 text-sm font-semibold text-ouro underline decoration-ouro/50 underline-offset-4 hover:text-ouro-claro"
+          className="mt-1 text-sm font-semibold text-vermelho underline underline-offset-2 hover:text-vermelho-escuro"
         >
           {aberta ? 'Mostrar menos' : 'Ler sinopse completa'}
         </button>

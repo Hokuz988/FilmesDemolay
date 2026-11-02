@@ -1,10 +1,13 @@
 /*
- * Heráldica da Ordem DeMolay, desenhada a partir do emblema oficial: espadas cruzadas,
- * coroa com os dez rubis, elmo, cruz branca de cinco braços e o medalhão anil
- * com o crescente cercado de estrelas.
+ * Heráldica e marca da Ordem DeMolay.
+ * - Emblema: o brasão tradicional (espadas cruzadas, coroa com os dez rubis, elmo,
+ *   cruz branca de cinco braços e medalhão com o crescente e as estrelas).
+ * - Marca: no estilo do logotipo atual da Ordem, com a fileira de estrelas e o escudo.
  */
 
-export const VIRTUDES = [
+import { Fragment } from 'react';
+
+const VIRTUDES = [
   'Amor Filial',
   'Reverência pelas Coisas Sagradas',
   'Cortesia',
@@ -14,9 +17,27 @@ export const VIRTUDES = [
   'Patriotismo',
 ];
 
-const ANIL = 'var(--color-anil)';
-const OURO = 'var(--color-ouro)';
-const RUBI = 'var(--color-rubi)';
+/** As sete virtudes da Ordem numa linha corrida, quebrando só entre uma virtude e outra. */
+export function Virtudes({ className }: { className?: string }) {
+  return (
+    <p className={className}>
+      {VIRTUDES.map((virtude, i) => (
+        <Fragment key={virtude}>
+          {i > 0 && ' '}
+          <span className="whitespace-nowrap">
+            {virtude}
+            {i < VIRTUDES.length - 1 && ' ·'}
+          </span>
+        </Fragment>
+      ))}
+    </p>
+  );
+}
+
+// Cores do brasão (fixas, independentes do tema).
+const ANIL = '#180f73';
+const OURO = '#f6b40c';
+const RUBI = '#c10d20';
 const OURO_SOMBRA = '#c98a06';
 const ACO = '#e4e6f5';
 
@@ -32,7 +53,7 @@ function caminhoEstrela(cx: number, cy: number, externo: number, interno: number
 }
 
 // Medalhão centrado em (100, 144): dez estrelas em volta do crescente e um aro de contas.
-const ESTRELAS = Array.from({ length: 10 }, (_, k) => {
+const ESTRELAS_MEDALHAO = Array.from({ length: 10 }, (_, k) => {
   const angulo = ((-90 + k * 36) * Math.PI) / 180;
   return caminhoEstrela(100 + 19.5 * Math.cos(angulo), 144 + 19.5 * Math.sin(angulo), 3.7, 1.5);
 });
@@ -76,7 +97,7 @@ function Espada({ transform }: { transform: string }) {
   );
 }
 
-/** Emblema completo, em cores. Fica legível a partir de uns 40px de largura. */
+/** Brasão completo, em cores. Fica legível a partir de uns 40px de largura. */
 export function Emblema({ className }: { className?: string }) {
   return (
     <svg viewBox="0 -2 200 260" className={className} role="img" aria-label="Emblema da Ordem DeMolay">
@@ -163,7 +184,7 @@ export function Emblema({ className }: { className?: string }) {
         {CONTAS.map(([x, y]) => (
           <circle key={`${x}-${y}`} cx={x} cy={y} r="1.3" />
         ))}
-        {ESTRELAS.map((d) => (
+        {ESTRELAS_MEDALHAO.map((d) => (
           <path key={d} d={d} />
         ))}
         <path d="M104.5 134.51 A10.5 10.5 0 1 0 108.44 150.25 A8.5 8.5 0 1 1 104.5 134.51 Z" />
@@ -172,75 +193,47 @@ export function Emblema({ className }: { className?: string }) {
   );
 }
 
-/** Cruz de cinco braços com o medalhão: a versão do emblema para tamanhos pequenos. */
-export function Cruz({ className, disco = false }: { className?: string; disco?: boolean }) {
-  return (
-    <svg viewBox="0 0 120 120" className={className} aria-hidden="true">
-      {disco && <circle cx="60" cy="60" r="57" fill={RUBI} stroke={OURO} strokeWidth="5" />}
-      {BRACOS.map((angulo) => (
-        <g key={angulo} transform={`translate(60 60) rotate(${angulo})`} fill="#fff" stroke={ANIL}>
-          <path d="M0 -6 L-23 -50 L0 -39 L23 -50 Z" strokeWidth="3" />
-          <circle cx="-23" cy="-50" r="4.6" strokeWidth="2.4" />
-          <circle cx="23" cy="-50" r="4.6" strokeWidth="2.4" />
-        </g>
-      ))}
-      <circle cx="60" cy="60" r="22" fill={ANIL} stroke={OURO} strokeWidth="3" />
-      <path d="M65.48 48.21 A13 13 0 1 0 70.8 67.23 A10.4 10.4 0 1 1 65.48 48.21 Z" fill={OURO} />
-    </svg>
-  );
-}
+const ESTRELA_PEQUENA = caminhoEstrela(0, 0.4, 5.6, 2.3);
 
-/** Coroa da Juventude, usada para coroar o filme escolhido. */
-export function Coroa({ className }: { className?: string }) {
-  const arcos = ['M16 49 C10 37 12 24 24.5 17.5 C29 15.4 35 14.6 40 14.6', 'M64 49 C70 37 68 24 55.5 17.5 C51 15.4 45 14.6 40 14.6', 'M40 14.6 V48'];
-  const rubis = [
-    [14.6, 36],
-    [19.4, 24],
-    [65.4, 36],
-    [60.6, 24],
-    [40, 27],
-    [40, 39],
-  ];
+/** Fileira de estrelas com o escudo ao centro, do logotipo da Ordem. */
+export function Estrelas({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 -1 80 68" className={className} aria-hidden="true">
-      <g stroke={ANIL} strokeWidth="1.4" strokeLinejoin="round">
-        <path d="M13 50 C5 36 8 20 23 13.5 C29 11 51 11 57 13.5 C72 20 75 36 67 50 Z" fill={RUBI} />
-        <g fill="none" strokeLinecap="round">
-          {arcos.map((d) => (
-            <g key={d}>
-              <path d={d} strokeWidth="6.6" />
-              <path d={d} stroke={OURO} strokeWidth="4.4" />
-            </g>
-          ))}
-        </g>
-        {rubis.map(([x, y]) => (
-          <circle key={`${x}-${y}`} cx={x} cy={y} r="2.7" fill={RUBI} strokeWidth="1.1" />
+    <svg viewBox="0 0 124 18" className={className} aria-hidden="true">
+      <g fill="var(--color-ouro)">
+        {[7, 24, 41, 83, 100, 117].map((x) => (
+          <path key={x} d={ESTRELA_PEQUENA} transform={`translate(${x} 9)`} />
         ))}
-        <path d={caminhoEstrela(40, 7.6, 6.6, 2.7)} fill={OURO} strokeWidth="1.2" />
-        <path d="M7 47 Q40 56 73 47 L72 59 Q40 68 8 59 Z" fill={OURO} />
-        <circle cx="19" cy="55.4" r="3.3" fill={RUBI} strokeWidth="1.1" />
-        <circle cx="61" cy="55.4" r="3.3" fill={RUBI} strokeWidth="1.1" />
-        <path d="M40 54.6 L44 58.8 L40 63 L36 58.8 Z" fill="#fff" strokeWidth="1.1" />
       </g>
+      <path d="M53 1H71V9.5C71 13.6 67 16.2 62 17.4C57 16.2 53 13.6 53 9.5Z" fill="var(--color-vermelho)" />
+      <path d={caminhoEstrela(62, 8.4, 4.4, 1.8)} fill="#fff" />
     </svg>
   );
 }
 
-export function Estrela({ className }: { className?: string }) {
+/** Escudo vermelho com a estrela branca. */
+export function EscudoEstrela({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
-      <path d="M12 1.6L14.7 8.88L22.46 9.2L16.37 14.02L18.47 21.5L12 17.2L5.53 21.5L7.63 14.02L1.54 9.2L9.3 8.88Z" />
+    <svg viewBox="0 0 32 36" className={className} aria-hidden="true">
+      <path d="M1 1H31V17C31 26 24 32 16 35C8 32 1 26 1 17Z" fill="var(--color-vermelho)" />
+      <path d={caminhoEstrela(16, 15, 8.6, 3.6)} fill="#fff" />
     </svg>
   );
 }
 
-export function Marca() {
+/** Marca do app: estrelas, "DeMolay" em letra larga contornada e "Filminhos" por baixo. */
+export function Marca({ claro = false, className = '' }: { claro?: boolean; className?: string }) {
   return (
-    <span className="inline-flex items-center gap-3">
-      <Emblema className="h-12 w-auto shrink-0 drop-shadow-[0_2px_6px_rgb(0_0_0/0.5)] sm:h-14" />
-      <span className="leading-none">
-        <span className="block font-ornamental text-lg font-bold text-marfim sm:text-xl">Filminhos</span>
-        <span className="mt-1.5 block font-titulo text-[0.62rem] font-bold tracking-[0.42em] text-ouro uppercase">DeMolay</span>
+    <span className={`inline-flex flex-col items-center leading-none ${className}`}>
+      <Estrelas className="h-[0.7em] w-auto" />
+      <span
+        className={`contornado mt-[0.12em] font-black tracking-[0.02em] font-stretch-expanded ${claro ? 'text-white' : 'text-marinho'}`}
+      >
+        D<span className="text-[0.78em]">E</span>M<span className="text-[0.78em]">OLAY</span>
+      </span>
+      <span
+        className={`mt-[0.2em] pl-[0.45em] text-[0.36em] font-extrabold tracking-[0.45em] ${claro ? 'text-ouro' : 'text-vermelho'}`}
+      >
+        FILMINHOS
       </span>
     </span>
   );

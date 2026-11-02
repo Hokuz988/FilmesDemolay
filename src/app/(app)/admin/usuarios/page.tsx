@@ -19,7 +19,7 @@ function AcaoUsuario({
   id,
   extra,
   children,
-  className = 'btn btn-fantasma btn-pequeno',
+  className = 'btn btn-contorno btn-pequeno',
   confirmar,
 }: {
   acao: (fd: FormData) => Promise<void>;
@@ -50,31 +50,34 @@ export default async function PaginaUsuarios() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
       <section className="min-w-0">
-        <h2 className="titulo-secao mb-4">Membros · {usuarios.length}</h2>
-        <ul className="space-y-3">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <h2 className="titulo-secao">Membros</h2>
+          <span className="text-sm text-cinza">{usuarios.length} cadastrados</span>
+        </div>
+        <ul className="cartao divide-y divide-linha">
           {usuarios.map((u) => {
             const souEu = u.id === eu.id;
             const bloqueado = u.bloqueado_ate && new Date(u.bloqueado_ate).getTime() > Date.now();
             return (
-              <li key={u.id} className={`cartao p-4 ${u.ativo ? '' : 'opacity-60'}`}>
-                <div className="flex flex-wrap items-center justify-between gap-3">
+              <li key={u.id} className={`px-4 py-4 sm:px-5 ${u.ativo ? '' : 'bg-papel/70'}`}>
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                   <div className="min-w-0">
-                    <p className="font-titulo text-lg font-bold text-marfim">
-                      {u.nome} {souEu && <span className="font-texto text-sm font-normal text-nevoa italic">(você)</span>}
+                    <p className={`font-bold ${u.ativo ? '' : 'text-cinza'}`}>
+                      {u.nome} {souEu && <span className="text-sm font-normal text-cinza">(você)</span>}
                     </p>
-                    <p className="text-sm text-nevoa">@{u.login}</p>
+                    <p className="text-sm text-cinza">@{u.login}</p>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <span className={`selo ${u.papel === 'admin' ? 'border-ouro bg-ouro text-anil' : 'border-nevoa/50 text-nevoa'}`}>
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className={`etiqueta ${u.papel === 'admin' ? 'bg-marinho text-white' : 'bg-nevoa text-cinza'}`}>
                       {u.papel === 'admin' ? 'Admin' : 'Membro'}
                     </span>
-                    {!u.ativo && <span className="selo border-nevoa/40 text-nevoa">Desativado</span>}
-                    {bloqueado && <span className="selo border-rubi-vivo/70 text-alerta">Bloqueado</span>}
+                    {!u.ativo && <span className="etiqueta border border-linha text-cinza">Desativado</span>}
+                    {bloqueado && <span className="etiqueta bg-vermelho text-white">Bloqueado</span>}
                   </div>
                 </div>
 
                 {!souEu && (
-                  <div className="mt-3 flex flex-wrap gap-2 border-t border-linha pt-3">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <AcaoUsuario acao={alterarPapel} id={u.id} extra={{ papel: u.papel === 'admin' ? 'membro' : 'admin' }}>
                       {u.papel === 'admin' ? 'Tornar membro' : 'Tornar admin'}
                     </AcaoUsuario>
@@ -93,9 +96,7 @@ export default async function PaginaUsuarios() {
                       Excluir
                     </AcaoUsuario>
                     <details className="w-full">
-                      <summary className="cursor-pointer font-titulo text-[0.7rem] font-bold tracking-[0.16em] text-nevoa uppercase hover:text-ouro">
-                        Redefinir senha
-                      </summary>
+                      <summary className="cursor-pointer text-sm font-semibold text-cinza hover:text-marinho">Redefinir senha</summary>
                       <FormAcao acao={redefinirSenha} className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-start">
                         <input type="hidden" name="id" value={u.id} />
                         <input
@@ -108,7 +109,7 @@ export default async function PaginaUsuarios() {
                           placeholder="Nova senha (mín. 8)"
                           className="campo sm:flex-1"
                         />
-                        <BotaoEnviar className="btn btn-ouro">Redefinir</BotaoEnviar>
+                        <BotaoEnviar className="btn btn-marinho">Redefinir</BotaoEnviar>
                       </FormAcao>
                     </details>
                   </div>
@@ -121,7 +122,7 @@ export default async function PaginaUsuarios() {
 
       <section className="cartao order-first h-fit p-5 sm:p-6 lg:order-none">
         <h2 className="titulo-secao">Novo membro</h2>
-        <p className="mt-2 text-sm text-nevoa">Envie o usuário e a senha para a pessoa; ela pode trocar a senha em “Minha conta”.</p>
+        <p className="mt-3 text-sm text-cinza">Envie o usuário e a senha para a pessoa; ela pode trocar a senha em “Minha conta”.</p>
         <FormAcao acao={criarUsuario} className="mt-5 space-y-4">
           <Campo rotulo="Nome">
             <input name="nome" required maxLength={80} className="campo" />

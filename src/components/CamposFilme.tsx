@@ -35,8 +35,8 @@ export function CamposFilme({ noiteId, filme }: { noiteId: number; filme?: Filme
         </Campo>
       </div>
       {filme?.capa_url && (
-        <label className="flex items-center gap-2 text-nevoa">
-          <input type="checkbox" name="remover_capa" className="size-4 accent-ouro" />
+        <label className="flex items-center gap-2 text-cinza">
+          <input type="checkbox" name="remover_capa" className="size-4 accent-marinho" />
           Remover a capa atual
         </label>
       )}

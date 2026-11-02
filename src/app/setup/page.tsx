@@ -15,14 +15,14 @@ export default async function PaginaSetup() {
   return (
     <TelaAutenticacao titulo="Configuração inicial" subtitulo="Crie a conta do primeiro administrador.">
       {!process.env.CODIGO_SETUP ? (
-        <p className="border-l-2 border-ouro bg-ouro/10 p-4">
-          Defina a variável de ambiente <code className="font-mono text-sm text-ouro-claro">CODIGO_SETUP</code> no painel da Vercel e
-          faça um novo deploy para continuar.
+        <p className="rounded-[3px] border-l-4 border-ouro bg-ouro/25 p-4">
+          Defina a variável de ambiente <code className="font-mono text-sm font-semibold">CODIGO_SETUP</code> no painel da Vercel e faça
+          um novo deploy para continuar.
         </p>
       ) : (
         <FormAcao acao={configurarInicial} className="space-y-4">
           <CamposCadastro rotuloCodigo="Código de configuração" dicaCodigo="O valor de CODIGO_SETUP definido na Vercel." />
-          <BotaoEnviar className="btn btn-primario w-full py-3">Criar administrador</BotaoEnviar>
+          <BotaoEnviar className="btn btn-primario w-full py-3 text-[0.9375rem]">Criar administrador</BotaoEnviar>
         </FormAcao>
       )}
     </TelaAutenticacao>

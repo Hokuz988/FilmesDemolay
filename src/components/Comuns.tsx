@@ -1,63 +1,43 @@
 import { ROTULO_STATUS } from '@/lib/datas';
 import type { StatusNoite } from '@/lib/tipos';
-import { Cruz, Estrela } from './Emblema';
+import { EscudoEstrela } from './Emblema';
 
 const CORES_STATUS: Record<StatusNoite, string> = {
-  rascunho: 'border-nevoa/40 text-nevoa',
-  aberta: 'border-ouro/70 text-ouro',
-  encerrada: 'border-rubi-vivo/70 text-alerta',
+  rascunho: 'border border-linha text-cinza',
+  aberta: 'bg-ouro text-marinho',
+  encerrada: 'bg-marinho text-white',
 };
 
 export function SeloStatus({ status, rotulo }: { status: StatusNoite; rotulo?: string }) {
-  return (
-    <span className={`selo ${CORES_STATUS[status]}`}>
-      {status === 'aberta' && <span className="size-1.5 animate-pulse rounded-full bg-ouro" />}
-      {rotulo ?? ROTULO_STATUS[status]}
-    </span>
-  );
+  return <span className={`etiqueta ${CORES_STATUS[status]}`}>{rotulo ?? ROTULO_STATUS[status]}</span>;
 }
 
-/** Capa em moldura dourada; sem imagem, mostra o céu do medalhão com a cruz da Ordem. */
+/** Capa do filme; sem imagem, mostra o escudo da Ordem sobre o azul-marinho. */
 export function Capa({ url, titulo, className = '' }: { url: string | null; titulo: string; className?: string }) {
   return (
-    <div className={`relative aspect-[2/3] overflow-hidden bg-abismo ring-1 ring-ouro/40 ${className}`}>
+    <div className={`relative aspect-[2/3] overflow-hidden bg-marinho ${className}`}>
       {url ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={url} alt={`Capa de ${titulo}`} loading="lazy" className="absolute inset-0 size-full object-cover" />
       ) : (
-        <div className="ceu absolute inset-0 flex flex-col items-center justify-center gap-3 p-3 text-center">
-          <Cruz className="w-12 sm:w-16" />
-          <span className="line-clamp-3 font-titulo text-[0.7rem] font-semibold tracking-[0.12em] text-marfim/85 uppercase">
-            {titulo}
-          </span>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-3 text-center">
+          <EscudoEstrela className="w-8 sm:w-11" />
+          <span className="line-clamp-3 text-xs font-bold text-white/85 sm:text-sm">{titulo}</span>
         </div>
       )}
     </div>
   );
 }
 
-/** Escudo heráldico com o número do filme em algarismos romanos. */
-export function Escudo({ numero, className = '' }: { numero: string; className?: string }) {
+/** Número do filme num escudo vermelho, como o do logotipo da Ordem. */
+export function Escudo({ numero }: { numero: number }) {
   return (
-    <span className={`relative inline-grid h-11 w-9 shrink-0 place-items-center pb-1.5 ${className}`}>
-      <svg viewBox="0 0 36 44" className="absolute inset-0 size-full drop-shadow-[0_2px_3px_rgb(0_0_0/0.6)]" aria-hidden="true">
-        <path d="M2 2H34V22C34 32 27 38.5 18 42C9 38.5 2 32 2 22Z" fill="var(--color-rubi)" stroke="var(--color-ouro)" strokeWidth="2" />
+    <span className="relative grid h-9 w-8 place-items-center pb-1 text-sm font-black text-white">
+      <svg viewBox="0 0 32 36" className="absolute inset-0 size-full drop-shadow-[0_1px_2px_rgb(0_0_0/0.35)]" aria-hidden="true">
+        <path d="M1 1H31V17C31 26 24 32 16 35C8 32 1 26 1 17Z" fill="var(--color-vermelho)" stroke="#fff" strokeWidth="1.5" />
       </svg>
-      <span className={`relative font-titulo font-bold text-marfim ${numero.length > 3 ? 'text-[0.55rem]' : 'text-[0.72rem]'}`}>
-        {numero}
-      </span>
+      <span className="relative">{numero}</span>
     </span>
-  );
-}
-
-/** Filete dourado com uma estrela ao centro. */
-export function Divisor({ className = '' }: { className?: string }) {
-  return (
-    <div className={`flex items-center gap-3 text-ouro ${className}`} aria-hidden="true">
-      <span className="h-px flex-1 bg-linear-to-r from-transparent to-ouro/60" />
-      <Estrela className="size-3" />
-      <span className="h-px flex-1 bg-linear-to-l from-transparent to-ouro/60" />
-    </div>
   );
 }
 
@@ -74,7 +54,7 @@ export function Campo({
     <label className="block">
       <span className="rotulo">{rotulo}</span>
       {children}
-      {dica && <span className="mt-1 block text-sm text-nevoa">{dica}</span>}
+      {dica && <span className="mt-1 block text-sm text-cinza">{dica}</span>}
     </label>
   );
 }

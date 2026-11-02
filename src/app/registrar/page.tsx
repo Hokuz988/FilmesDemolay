@@ -16,11 +16,11 @@ export default async function PaginaRegistrar() {
     <TelaAutenticacao titulo="Criar conta" subtitulo="Use o código de convite enviado pelo capítulo.">
       <FormAcao acao={registrar} className="space-y-4">
         <CamposCadastro rotuloCodigo="Código de convite" />
-        <BotaoEnviar className="btn btn-primario w-full py-3">Criar conta</BotaoEnviar>
+        <BotaoEnviar className="btn btn-primario w-full py-3 text-[0.9375rem]">Criar conta</BotaoEnviar>
       </FormAcao>
-      <p className="mt-6 text-nevoa">
+      <p className="mt-6 text-cinza">
         Já tem conta?{' '}
-        <Link href="/login" className="font-semibold text-ouro underline decoration-ouro/50 underline-offset-4 hover:text-ouro-claro">
+        <Link href="/login" className="font-semibold text-vermelho underline underline-offset-2 hover:text-vermelho-escuro">
           Entrar
         </Link>
       </p>

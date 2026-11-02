@@ -54,6 +54,23 @@ export function deInputLocal(valor: string): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+/** Partes da data para a folhinha de calendário: dia, mês e dia da semana abreviados, e hora. */
+export function partesData(d: Date | string) {
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat('pt-BR', {
+      timeZone: FUSO,
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+      .formatToParts(new Date(d))
+      .map((parte) => [parte.type, parte.value.replace('.', '')]),
+  );
+  return { semana: p.weekday, dia: p.day, mes: p.month, hora: `${p.hour}h${p.minute}` };
+}
+
 export function formatarDuracao(minutos: number | null) {
   if (!minutos) return '';
   const h = Math.floor(minutos / 60);

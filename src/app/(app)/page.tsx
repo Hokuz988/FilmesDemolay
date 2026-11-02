@@ -1,16 +1,31 @@
 import Link from 'next/link';
 import { votar } from '@/app/acoes/votos';
-import { Capa, Divisor, Escudo } from '@/components/Comuns';
-import { Coroa, Cruz, Emblema } from '@/components/Emblema';
+import { Capa, Escudo } from '@/components/Comuns';
+import { Emblema } from '@/components/Emblema';
 import { BotaoEnviar } from '@/components/Formularios';
 import { Sinopse } from '@/components/Interativos';
 import { exigirUsuario } from '@/lib/auth';
-import { formatarData, formatarDuracao, tempoRestante, votacaoAberta } from '@/lib/datas';
+import { formatarDuracao, partesData, tempoRestante, votacaoAberta } from '@/lib/datas';
 import { db } from '@/lib/db';
-import { romano } from '@/lib/romano';
 import type { FilmeComVotos, Noite } from '@/lib/tipos';
 
 export const metadata = { title: 'Votação' };
+
+/** Folhinha de calendário com a data da sessão. */
+function Folhinha({ data }: { data: Date }) {
+  const { semana, dia, mes, hora } = partesData(data);
+  return (
+    <div className="flex w-fit shrink-0 overflow-hidden rounded-[3px] bg-white text-marinho md:w-28 md:flex-col md:text-center">
+      <span className="flex items-center bg-vermelho px-2.5 text-xs font-extrabold tracking-[0.12em] text-white uppercase md:justify-center md:py-1.5">
+        {mes}
+      </span>
+      <span className="px-2.5 py-1.5 text-2xl leading-none font-black font-stretch-expanded md:px-0 md:pt-2 md:pb-0 md:text-5xl">{dia}</span>
+      <span className="flex items-center pr-3 text-sm text-cinza md:justify-center md:p-0 md:pt-1.5 md:pb-2.5">
+        {semana} · {hora}
+      </span>
+    </div>
+  );
+}
 
 export default async function PaginaVotacao() {
   const usuario = await exigirUsuario();
@@ -24,16 +39,17 @@ export default async function PaginaVotacao() {
 
   if (!noite) {
     return (
-      <div className="cartao mx-auto max-w-lg px-6 py-12 text-center">
-        <Emblema className="mx-auto w-28 drop-shadow-[0_0_22px_rgb(246_180_12/0.25)]" />
-        <p className="sobretitulo mt-7">Aguardando convocação</p>
-        <h1 className="mt-2 font-titulo text-2xl font-bold sm:text-3xl">Nenhuma sessão aberta</h1>
-        <p className="mt-3 text-nevoa">Assim que a próxima noite de filmes for aberta, os filmes indicados aparecem aqui.</p>
-        {usuario.papel === 'admin' && (
-          <Link href="/admin" className="btn btn-primario mt-7">
-            Criar noite de filmes
-          </Link>
-        )}
+      <div className="cartao mx-auto flex max-w-xl flex-col items-start gap-6 p-6 sm:flex-row sm:items-center sm:p-8">
+        <Emblema className="w-20 shrink-0" />
+        <div>
+          <h1 className="text-2xl font-black tracking-tight font-stretch-expanded">Nenhuma votação aberta</h1>
+          <p className="mt-2 text-cinza">Quando a próxima noite de filmes for aberta, os filmes aparecem aqui.</p>
+          {usuario.papel === 'admin' && (
+            <Link href="/admin" className="btn btn-primario mt-5">
+              Criar noite de filmes
+            </Link>
+          )}
+        </div>
       </div>
     );
   }
@@ -49,7 +65,7 @@ export default async function PaginaVotacao() {
   `) as { filme_id: number }[];
 
   const aberta = votacaoAberta(noite);
-  const numero = new Map(filmes.map((f, i) => [f.id, romano(i + 1)]));
+  const numero = new Map(filmes.map((f, i) => [f.id, i + 1]));
   const totalVotos = filmes.reduce((soma, f) => soma + f.votos, 0);
   const maisVotos = Math.max(0, ...filmes.map((f) => f.votos));
   const vencedores = !aberta && maisVotos > 0 ? filmes.filter((f) => f.votos === maisVotos) : [];
@@ -57,121 +73,136 @@ export default async function PaginaVotacao() {
   const ordenados = aberta ? filmes : [...filmes].sort((a, b) => b.votos - a.votos);
 
   return (
-    <div className="space-y-12 sm:space-y-16">
-      {/* Medalhão: a noite estrelada do emblema */}
-      <section className="medalhao ceu px-5 py-10 text-center sm:px-12 sm:py-16">
-        <Cruz className="pointer-events-none absolute top-1/2 left-1/2 -z-10 w-[26rem] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.07] sm:w-[36rem]" />
-        <p className="sobretitulo text-[0.68rem] sm:text-xs">
-          Sessão nº {String(noite.id).padStart(3, '0')} · {aberta ? 'Escrutínio aberto' : 'Escrutínio encerrado'}
-        </p>
-        <h1 className="mx-auto mt-4 max-w-4xl font-titulo text-3xl leading-tight font-bold text-balance text-marfim sm:text-6xl sm:leading-[1.1]">
-          {noite.titulo}
-        </h1>
-        <Divisor className="mx-auto mt-6 max-w-xs" />
-        {(noite.data_evento || restante) && (
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-titulo text-xs font-semibold tracking-[0.14em] uppercase sm:text-sm">
-            {noite.data_evento && <span className="text-ouro">{formatarData(noite.data_evento)}</span>}
-            {restante && <span className="text-marfim/75">Votação encerra em {restante}</span>}
+    <div className="space-y-10 sm:space-y-12">
+      {/* Cabeçalho da sessão */}
+      <section className="overflow-hidden rounded-[4px] bg-marinho text-white">
+        <div className="flex flex-col gap-6 p-6 sm:p-10 md:flex-row md:items-end md:justify-between">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+              <span className={`etiqueta ${aberta ? 'bg-ouro text-marinho' : 'bg-white/15 text-white'}`}>
+                {aberta ? 'Votação aberta' : 'Votação encerrada'}
+              </span>
+              {restante && <span className="text-white/75">encerra em {restante}</span>}
+              <span className="text-white/60">Sessão nº {noite.id}</span>
+            </div>
+            <h1 className="mt-4 text-3xl leading-[1.05] font-black tracking-tight text-balance font-stretch-expanded sm:text-5xl">
+              {noite.titulo}
+            </h1>
+            {noite.descricao && (
+              <p className="mt-4 max-w-2xl whitespace-pre-line text-white/80 sm:text-lg">{noite.descricao}</p>
+            )}
           </div>
-        )}
-        {noite.descricao && (
-          <p className="mx-auto mt-6 max-w-2xl text-lg whitespace-pre-line text-marfim/80 italic sm:text-xl">{noite.descricao}</p>
-        )}
+          {noite.data_evento && <Folhinha data={noite.data_evento} />}
+        </div>
+        <div className="h-1.5 bg-vermelho" />
       </section>
 
-      {/* Coroação do filme escolhido */}
+      {/* Resultado */}
       {!aberta && (
-        <section className="cartao bg-[radial-gradient(ellipse_at_50%_0%,rgb(246_180_12/0.14),transparent_65%)] px-5 py-10 text-center sm:py-14">
+        <section className="cartao flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
+          {vencedores.length === 1 && (
+            <Capa url={vencedores[0].capa_url} titulo={vencedores[0].titulo} className="w-24 shrink-0 rounded-[3px] sm:w-28" />
+          )}
           {vencedores.length > 0 ? (
-            <>
-              <Coroa className="mx-auto w-20 drop-shadow-[0_6px_14px_rgb(0_0_0/0.5)] sm:w-24" />
-              <p className="sobretitulo mt-5 text-nevoa">{vencedores.length > 1 ? 'Empate entre' : 'O filme escolhido é'}</p>
-              <p className="mx-auto mt-3 max-w-3xl font-titulo text-2xl leading-tight font-bold text-balance text-ouro sm:text-5xl">
-                {vencedores.map((f) => f.titulo).join(' & ')}
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-vermelho">{vencedores.length > 1 ? 'Empate' : 'Filme escolhido'}</p>
+              <p className="mt-1 text-2xl leading-tight font-black tracking-tight text-balance font-stretch-expanded sm:text-4xl">
+                {vencedores.map((f) => f.titulo).join(' e ')}
               </p>
-              <Divisor className="mx-auto mt-6 max-w-[12rem]" />
-              <p className="mt-4 text-nevoa">
-                {totalVotos} {totalVotos === 1 ? 'voto apurado' : 'votos apurados'}
+              <p className="mt-2 text-cinza">
+                {maisVotos} de {totalVotos} {totalVotos === 1 ? 'voto' : 'votos'}
+                {vencedores.length > 1 && ' cada'}
               </p>
-            </>
+            </div>
           ) : (
-            <p className="text-nevoa">A votação foi encerrada sem votos.</p>
+            <p className="text-cinza">A votação foi encerrada sem votos.</p>
           )}
         </section>
       )}
 
-      {/* Filmes indicados */}
+      {/* Filmes */}
       <section>
-        <h2 className="titulo-secao mb-6">{aberta ? 'Filmes indicados' : 'Apuração'}</h2>
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+          <h2 className="titulo-secao">{aberta ? 'Filmes indicados' : 'Resultado da votação'}</h2>
+          {filmes.length > 0 && (
+            <span className="text-sm text-cinza">
+              {filmes.length} {filmes.length === 1 ? 'filme' : 'filmes'}
+              {aberta && (meuVoto ? ' · você já votou' : ' · você ainda não votou')}
+            </span>
+          )}
+        </div>
         {filmes.length === 0 ? (
-          <p className="cartao p-6 text-center text-nevoa">Os filmes desta noite ainda não foram anunciados.</p>
+          <p className="cartao p-6 text-cinza">Os filmes desta noite ainda não foram anunciados.</p>
         ) : (
-          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {ordenados.map((filme) => {
-              const n = numero.get(filme.id) ?? '';
+              const n = numero.get(filme.id) ?? 0;
               const meu = filme.id === meuVoto?.filme_id;
               const vencedor = vencedores.some((v) => v.id === filme.id);
               const pct = totalVotos ? Math.round((filme.votos / totalVotos) * 100) : 0;
               return (
-                <li key={filme.id} className={`cartao flex flex-col ${meu ? 'cartao-destaque' : ''}`}>
-                  <div className="flex flex-1 sm:flex-col">
-                    <div className="relative w-28 shrink-0 p-2 sm:w-full sm:p-3 sm:pb-0">
-                      <Capa url={filme.capa_url} titulo={filme.titulo} className="h-full w-full min-h-44 sm:h-auto sm:min-h-0" />
-                      <span className="absolute -top-px left-3.5 sm:left-5">
+                <li
+                  key={filme.id}
+                  className={`cartao flex flex-col overflow-hidden ${meu ? 'border-marinho ring-1 ring-marinho' : ''}`}
+                >
+                  <div className="flex flex-1 gap-3.5 p-3 sm:flex-col sm:gap-0 sm:p-0">
+                    <div className="relative w-24 shrink-0 sm:w-full">
+                      <Capa
+                        url={filme.capa_url}
+                        titulo={filme.titulo}
+                        className="h-full w-full min-h-36 rounded-[3px] sm:h-auto sm:min-h-0 sm:rounded-none"
+                      />
+                      <span className="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5">
                         <Escudo numero={n} />
                       </span>
                     </div>
-                    <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 sm:pb-0">
-                      {(vencedor || meu || filme.duracao_min) && (
-                        <div className="mb-2 flex flex-wrap items-center gap-2">
-                          {vencedor && <span className="selo border-ouro bg-ouro text-anil">Escolhido</span>}
-                          {meu && <span className="selo border-ouro/70 text-ouro">Seu voto</span>}
-                          {filme.duracao_min ? (
-                            <span className="ml-auto font-titulo text-[0.7rem] font-semibold tracking-[0.12em] text-nevoa uppercase">
-                              {formatarDuracao(filme.duracao_min)}
-                            </span>
-                          ) : null}
-                        </div>
-                      )}
-                      <h3 className="font-titulo text-lg leading-snug font-bold text-marfim sm:text-xl">{filme.titulo}</h3>
-                      <div className="mt-2">
+                    <div className="flex min-w-0 flex-1 flex-col sm:px-5 sm:pt-5">
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-cinza">
+                        {meu && <span className="etiqueta bg-marinho text-white">Seu voto</span>}
+                        {vencedor && <span className="etiqueta bg-ouro text-marinho">Escolhido</span>}
+                        {filme.duracao_min ? <span>{formatarDuracao(filme.duracao_min)}</span> : null}
+                      </div>
+                      <h3 className="mt-1.5 text-[1.0625rem] leading-snug font-extrabold sm:text-xl">{filme.titulo}</h3>
+                      <div className="mt-1.5">
                         <Sinopse texto={filme.descricao} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="border-t border-linha p-4 sm:border-0 sm:p-5">
+                  <div className="px-3 pb-3 sm:p-5">
                     {aberta ? (
                       meu ? (
-                        <div className="flex items-center justify-between gap-3 border border-ouro/60 bg-ouro/10 px-5 py-3 font-titulo text-[0.8rem] font-bold tracking-[0.14em] text-ouro uppercase">
-                          <span className="flex items-center gap-2">
-                            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
-                              <path d="M4 12.5 9.5 18 20 6.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            Voto registrado
-                          </span>
-                          <span className="border-l border-ouro/40 pl-3">{n}</span>
-                        </div>
+                        <p className="flex min-h-11 items-center gap-2 rounded-[3px] bg-marinho px-4 text-sm font-semibold text-white">
+                          <svg
+                            viewBox="0 0 24 24"
+                            className="size-4 shrink-0 text-ouro"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            aria-hidden="true"
+                          >
+                            <path d="M4 12.5 9.5 18 20 6.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          Seu voto está neste filme
+                        </p>
                       ) : (
                         <form action={votar}>
                           <input type="hidden" name="filme_id" value={filme.id} />
-                          <BotaoEnviar className="btn btn-primario w-full justify-between px-5 py-3">
-                            <span>{meuVoto ? 'Trocar para este' : 'Votar neste filme'}</span>
-                            <span className="border-l border-marfim/30 pl-3">{n}</span>
+                          <BotaoEnviar className="btn btn-primario min-h-11 w-full">
+                            {meuVoto ? 'Mudar meu voto para este' : 'Votar neste filme'}
                           </BotaoEnviar>
                         </form>
                       )
                     ) : (
                       <div>
-                        <div className="flex items-end gap-2">
-                          <span className="font-titulo text-sm font-semibold">
+                        <div className="flex items-baseline justify-between text-sm">
+                          <span className="font-semibold">
                             {filme.votos} {filme.votos === 1 ? 'voto' : 'votos'}
                           </span>
-                          <span className="mb-1.5 flex-1 border-b border-dotted border-nevoa/40" />
-                          <span className="font-titulo text-sm font-bold text-ouro">{pct}%</span>
+                          <span className="font-bold">{pct}%</span>
                         </div>
-                        <div className="mt-2 h-1.5 bg-campo ring-1 ring-linha">
-                          <div className={`h-full ${vencedor ? 'bg-ouro' : 'bg-nevoa/50'}`} style={{ width: `${pct}%` }} />
+                        <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-nevoa">
+                          <div className={`h-full ${vencedor ? 'bg-ouro' : 'bg-marinho/35'}`} style={{ width: `${pct}%` }} />
                         </div>
                       </div>
                     )}
